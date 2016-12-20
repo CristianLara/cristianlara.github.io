@@ -5,6 +5,9 @@ var Typer={
    speed:2, // speed of the Typer
    file:"", //file, must be set
    pending:"", // next string of text to type
+   insertingHtml:false,
+   htmlIndex:0,
+   htmlDelta:0,
 
    init:function(){ // inizialize Hacker Typer
       accessCountimer = setInterval(function(){Typer.blink();},500); // inizialize timer for blinking cursor
@@ -69,24 +72,50 @@ var Typer={
 
    addText3:function(key){ //Main function to add the code
       if(Typer.text){ // otherway if text is loaded
-         var cont=Typer.content(); // get the console content
          this.removeCursor();
+
+         if(Typer.insertingHtml) {
+            Typer.htmlIndex += Typer.speed;
+            var char = Typer.text.substring(Typer.htmlIndex - Typer.speed, Typer.htmlIndex);
+            if(char.includes("<")) {
+               Typer.insertingHtml = false;
+               return;
+            }
+            var cont=Typer.content();
+            $("#console").html(cont.substring(0, Typer.htmlIndex + Typer.htmlDelta - 1) + char + cont.substring(Typer.htmlIndex - 1 + Typer.htmlDelta));
+            return;
+         }
 
          Typer.index+=Typer.speed;
 
-         var text=Typer.text.substring(0,Typer.index) // parse the text for stripping html enities
-
          Typer.pending += Typer.text.substring(Typer.index - Typer.speed, Typer.index);
-         if(Typer.pending.includes("<")) {
+         if(Typer.pending.includes("\n")) {
+            Typer.write("<br>");
+            Typer.htmlDelta += 3;
+            Typer.pending = "";
+            return;
+         }
 
-         } else if(Typer.pending.includes(">")) {
-            Typer.pending.replace("\n", "<br/>");
+         if(Typer.pending.includes("<")) { // we encountered HTML
+            var endOfOpenTag = Typer.text.indexOf(">", Typer.index);
+            var startOfCloseTag = Typer.text.indexOf("<", endOfOpenTag);
+            var endOfCloseTag = Typer.text.indexOf(">", startOfCloseTag);
+
+            var openTag = Typer.text.substring(Typer.index - 1, endOfOpenTag + 1);
+            var closeTag = Typer.text.substring(startOfCloseTag, endOfCloseTag + 1);
+
+            Typer.write(openTag + closeTag);
+
+            Typer.insertingHtml = true;
+            Typer.index = endOfCloseTag + 1;
+            Typer.htmlIndex = endOfOpenTag + 1;
+
+            Typer.pending = "";
+         } else {
             Typer.write(Typer.pending);
             Typer.pending = "";
          }
 
-
-         // Typer.write(Typer.text.substring(Typer.index - Typer.speed, Typer.index).replace("\n","<br/>"));
          window.scrollBy(0,50); // scroll to make sure bottom is always visible
       }
    },
@@ -117,13 +146,14 @@ function replaceUrls(text) {
    }
 }
 
+const SPEED = 1;
 Typer.speed=1;
 Typer.file="terminalText.txt";
 Typer.init();
 
 var timer = setInterval("t();", 20);
 function t() {
-   Typer.addText({"keyCode": 123748});
+   Typer.addText3({"keyCode": 123748});
    if (Typer.index > Typer.text.length) {
       clearInterval(timer);
    }
