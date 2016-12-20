@@ -1,2 +1,0 @@
-# cristianlara.me
-My Webpage
