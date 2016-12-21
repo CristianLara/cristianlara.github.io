@@ -1,6 +1,6 @@
 var Terminal = {
 
-   text:null,           // to contain the content of the text file
+   text:"",           // to contain the content of the text file
    index:0,             // current cursor position
    speed:1,             // number of letters to add at a time
    file:"",             // name of text file to get text from
@@ -16,7 +16,7 @@ var Terminal = {
    init:function() {
       setInterval(function(){Terminal.blink();},500); // start cursor blink
       $.get(Terminal.file,function(data){
-         Terminal.text=data; // save the textfile in Terminal.text
+         Terminal.text = data; // save the textfile in Terminal.text
       });
    },
 
