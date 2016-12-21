@@ -1,13 +1,13 @@
 var Terminal = {
 
-   text:"",           // to contain the content of the text file
+   userName:"",
+   text:"",             // to contain the content of the text file
    index:0,             // current cursor position
    speed:1,             // number of letters to add at a time
    file:"",             // name of text file to get text from
    pending:"",          // pending string of text to type
    insertingHtml:false, // indicates if we are inserting text between html tags
-   htmlIndex:0,         // the index pointing right before the html close tag
-   htmlOffset:0,        // the offset in the content compared to the textfile
+   contentOffset:0,     // the offset in the content compared to the textfile
 
    /**
    * init()
@@ -38,22 +38,17 @@ var Terminal = {
    },
 
    /**
-   * insertBetweenHtmlTags()
-   * keeps track of a separate index of the space between the current tags
-   * inserts pending characters between tags
+   * insert(str)
+   * appends str to the end of the console
    */
-   insertBetweenHtmlTags:function() {
-      Terminal.htmlIndex += Terminal.speed;
-      var htmlContent = Terminal.text.substring(
-        Terminal.htmlIndex - Terminal.speed, Terminal.htmlIndex);
-      if(htmlContent.includes("<")) {
-         Terminal.insertingHtml = false;
-         return;
-      }
-      var cont = Terminal.content();
-      var contentBefore = cont.substring(0, Terminal.htmlIndex + Terminal.htmlOffset - 1);
-      var contentAfter = cont.substring(Terminal.htmlIndex - 1 + Terminal.htmlOffset);
-      $("#console").html(contentBefore + htmlContent + contentAfter);
+   insert:function(str) {
+      var content = Terminal.content();
+      var contentBefore = 
+         content.substring(0, Terminal.index + Terminal.contentOffset - 1);
+      var contentAfter = 
+         content.substring(Terminal.index + Terminal.contentOffset - 1);
+
+      $("#console").html(contentBefore + str + contentAfter);
    },
 
    /**
@@ -65,22 +60,38 @@ var Terminal = {
       if(!Terminal.text) return;
       Terminal.removeCursor();
 
-      if(Terminal.insertingHtml) {
-         Terminal.insertBetweenHtmlTags();
-      } else {
-         Terminal.index += Terminal.speed;
-         Terminal.pending = Terminal.text.substring(
-            Terminal.index - Terminal.speed, Terminal.index);
+      Terminal.index += Terminal.speed;
+      Terminal.pending = Terminal.text.substring(
+         Terminal.index - Terminal.speed, Terminal.index);
 
-         // if the next character is a line break, replace it with a <br> tag
-         // makes the content 3 characters longer than the text file
-         if(Terminal.pending.includes("\n")) {
-            Terminal.write("<br>");
-            Terminal.htmlOffset += 3;
-            return;
-         }
+      console.log(Terminal.pending);
 
-         if(Terminal.pending.includes("<")) { // we encountered HTML
+      // if the next character is a line break, replace it with a <br> tag
+      // makes the content 3 characters longer than the text file
+      if(Terminal.pending.includes("\n")) {
+         clearInterval(timer);
+         setTimeout(continueTyping, 1000);
+
+         // Terminal.insert("<br>");
+         // Terminal.contentOffset += "<br>".length - "\n".length;
+         return;
+      } else if(Terminal.pending.includes("~")) {
+         Terminal.insert(Terminal.userName);
+         Terminal.contentOffset += Terminal.userName.length - "~".length;
+         return;
+      }
+
+      if(Terminal.pending.includes("<")) { // we encountered HTML
+         if(Terminal.insertingHtml) {
+            Terminal.insertingHtml = false;
+
+            var endOfCloseTag = Terminal.text.indexOf(">", Terminal.index);
+            var closeTag = Terminal.text.substring(Terminal.index, endOfCloseTag);
+
+            Terminal.index += closeTag.length + 1;
+         } else {
+            Terminal.insertingHtml = true;
+
             var endOfOpenTag = Terminal.text.indexOf(">", Terminal.index);
             var startOfCloseTag = Terminal.text.indexOf("<", endOfOpenTag);
             var endOfCloseTag = Terminal.text.indexOf(">", startOfCloseTag);
@@ -88,17 +99,17 @@ var Terminal = {
             var openTag = Terminal.text.substring(Terminal.index - 1, endOfOpenTag + 1);
             var closeTag = Terminal.text.substring(startOfCloseTag, endOfCloseTag + 1);
 
-            Terminal.write(openTag + closeTag);
+            console.log(openTag + "  " + closeTag);
 
-            Terminal.insertingHtml = true;
-            Terminal.index = endOfCloseTag + 1;
-            Terminal.htmlIndex = endOfOpenTag + 1;
+            Terminal.insert(openTag + closeTag);
 
-         } else {
-            Terminal.write(Terminal.pending);
+            Terminal.index += openTag.length - 1;
          }
+      } else {
+         Terminal.insert(Terminal.pending);
       }
 
+      console.log(Terminal.content());
       window.scrollBy(0,50); // scroll to make sure bottom is always visible
       
    },
@@ -146,10 +157,26 @@ var Terminal = {
 
 Terminal.speed=1;
 Terminal.file="terminalText.txt";
+Terminal.userName = "<span id=\"a\">root@cristianlara</span>:" + 
+                    "<span id=\"b\">~</span>" +
+                    "<span id=\"c\">$</span>"
+
 Terminal.init();
 
-var timer = setInterval("t();", 20);
-function t() {
+var timer = null;
+startTyping();
+
+function startTyping() {
+   timer = setInterval("type();", 20); //20
+}
+
+function continueTyping() {
+   Terminal.insert("<br>");
+   Terminal.contentOffset += "<br>".length - "\n".length;
+   timer = setInterval("type();", 20); //20
+}
+
+function type() {
    Terminal.addText();
    if (Terminal.index > Terminal.text.length) {
       clearInterval(timer);
