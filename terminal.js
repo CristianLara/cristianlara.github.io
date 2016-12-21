@@ -70,7 +70,7 @@ var Terminal = {
       // makes the content 3 characters longer than the text file
       if(Terminal.pending.includes("\n")) {
          clearInterval(timer);
-         setTimeout(continueTyping, 1000);
+         setTimeout(continueTyping, 200);
 
          // Terminal.insert("<br>");
          // Terminal.contentOffset += "<br>".length - "\n".length;

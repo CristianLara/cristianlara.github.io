@@ -1,6 +1,17 @@
-~ hello everyone, this is my website
-~ there's currently nothing on it..
-...
-...
-...
-~ gotta do that.. for now here are html link tests: <a href="http://www.google.com">google</a> <a href="http://www.apple.com">apple</a>
+~ ./resume
+
+Cristian Lara
+<a href="mailto:cristianlara@stanford.edu">cristianlara@stanford.edu</a>
+
+<a href="http://www.stanford.edu">Stanford University</a> '18
+Computer Science, Human-Computer Interaction
+
+-Employment-
+<a href="http://www.stanford.edu">Stanford High Performance Computing Center</a> / Stanford, California
+Software Developer / April 2015 — Present
+
+<a href="http://www.cyngn.com">Cyanogen</a> / Palo Alto, California
+Software Developer Intern / June 2016 — August 2016
+
+<a href="http://www.cyngn.com">Cydia SaurikIT</a> / Waco, Texas
+iPhone Theme Designer and Software Developer / May 2011 — February 2013
