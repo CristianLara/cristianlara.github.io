@@ -3,7 +3,7 @@ var Terminal = {
    userName:"",
    text:"",             // to contain the content of the text file
    index:0,             // current cursor position
-   speed:0,             // number of letters to add at a time
+   speed:1,             // number of letters to add at a time
    file:"",             // name of text file to get text from
    pending:"",          // pending string of text to type
    insertingHtml:false, // indicates if we are inserting text between html tags
@@ -136,8 +136,9 @@ var Terminal = {
       Terminal.removeCursor();
 
       Terminal.index += Terminal.speed;
-      Terminal.pending = Terminal.text.substring(
-         Terminal.index - Terminal.speed, Terminal.index);
+      Terminal.pending = Terminal.text.charAt(Terminal.index - 1);
+      // Terminal.pending = Terminal.text.substring(
+         // Terminal.index - Terminal.speed, Terminal.index);
 
       // if the next character indicates an action
       if(Terminal.specialCharacters.includes(Terminal.pending)) {
@@ -198,7 +199,7 @@ var Terminal = {
    }
 }
 
-Terminal.speed=1;
+// Terminal.speed=1;
 Terminal.file="terminalText.txt";
 Terminal.userName = "cristianlara"
 
