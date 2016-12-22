@@ -3,19 +3,17 @@ var Terminal = {
    userName:"",
    text:"",             // to contain the content of the text file
    index:0,             // current cursor position
-   speed:1,             // number of letters to add at a time
+   speed:0,             // number of letters to add at a time
    file:"",             // name of text file to get text from
    pending:"",          // pending string of text to type
    insertingHtml:false, // indicates if we are inserting text between html tags
    contentOffset:0,     // the offset in the content compared to the textfile
-
-   /**
-   * These special characters indicate specific actions for the Terminal
-   * \n : insert <br>
-   * ~  : insert terminal prompt
-   * `  : pause before typing more
-   */
-   specialCharacters:["\n", "~", "`"],
+   pauseDuration:500,   // duration of pause action in milliseconds
+   htmlIndicator:"<",   // character indicating that we have encountered html
+   
+   // these characters are interpreted as special actions when read
+   // i.e. linebreak, pause, clear
+   specialCharacters:["\n", "~", "`", "\\"],
 
    /**
    * init()
@@ -30,7 +28,7 @@ var Terminal = {
 
    /**
    * content()
-   * returns the content in the console
+   * returns the content in the terminal
    */
    content:function() {
       return $("#console").html();
@@ -38,7 +36,7 @@ var Terminal = {
 
    /**
    * write(str)
-   * appends str to the end of the console
+   * appends str to the end of the terminal
    */
    write:function(str) {
       $("#console").append(str);
@@ -47,7 +45,7 @@ var Terminal = {
 
    /**
    * insert(str)
-   * appends str to the end of the console
+   * appends str to the end of the terminal
    */
    insert:function(str) {
       var content = Terminal.content();
@@ -60,12 +58,21 @@ var Terminal = {
    },
 
    /**
+   * clear()
+   * clears the terminal
+   */
+   clear:function() {
+      $("#console").html("");
+   },
+
+   /**
    * handleSpecialCharacter(char)
    * handle special characters with the following actions
    *
    * \n : insert <br> tag
    * ~  : insert terminal prompt
    * `  : pause before typing more
+   * \  : clear terminal
    */
    handleSpecialCharacter:function(char) {
       if(char.includes("\n")) {
@@ -73,13 +80,49 @@ var Terminal = {
          Terminal.contentOffset += "<br>".length - "\n".length;
       }
       else if(char.includes("~")) {
-         Terminal.insert(Terminal.userName);
-         Terminal.contentOffset += Terminal.userName.length - "~".length;
+         var prompt = "<span id=\"a\">root@" + Terminal.userName + "</span>:" + 
+                      "<span id=\"b\">~</span>" +
+                      "<span id=\"c\">$</span>";
+         Terminal.insert(prompt);
+         Terminal.contentOffset += prompt.length - "~".length;
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= 1;
          clearInterval(timer);
-         setTimeout(startTyping, 500);
+         setTimeout(startTyping, Terminal.pauseDuration);
+      }
+      else if(char.includes("\\")) {
+         Terminal.clear();
+         Terminal.contentOffset = -Terminal.index;
+      }
+   },
+
+   /**
+   * handleHtml()
+   * Adds encountered html tags to the content, then offsets index to add
+   * next characters between the tags until the end tag is reached.
+   */
+   handleHtml:function() {
+      if(Terminal.insertingHtml) {
+         Terminal.insertingHtml = false;
+
+         var endOfCloseTag = Terminal.text.indexOf(">", Terminal.index);
+         var closeTag = Terminal.text.substring(Terminal.index, endOfCloseTag);
+
+         Terminal.index += closeTag.length + 1;
+      } else {
+         Terminal.insertingHtml = true;
+
+         var endOfOpenTag = Terminal.text.indexOf(">", Terminal.index);
+         var startOfCloseTag = Terminal.text.indexOf("<", endOfOpenTag);
+         var endOfCloseTag = Terminal.text.indexOf(">", startOfCloseTag);
+
+         var openTag = Terminal.text.substring(Terminal.index - 1, endOfOpenTag + 1);
+         var closeTag = Terminal.text.substring(startOfCloseTag, endOfCloseTag + 1);
+
+         Terminal.insert(openTag + closeTag);
+
+         Terminal.index += openTag.length - 1;
       }
    },
 
@@ -96,34 +139,17 @@ var Terminal = {
       Terminal.pending = Terminal.text.substring(
          Terminal.index - Terminal.speed, Terminal.index);
 
+      // if the next character indicates an action
       if(Terminal.specialCharacters.includes(Terminal.pending)) {
          Terminal.handleSpecialCharacter(Terminal.pending);
-         return;
       }
-
-      if(Terminal.pending.includes("<")) { // we encountered HTML
-         if(Terminal.insertingHtml) {
-            Terminal.insertingHtml = false;
-
-            var endOfCloseTag = Terminal.text.indexOf(">", Terminal.index);
-            var closeTag = Terminal.text.substring(Terminal.index, endOfCloseTag);
-
-            Terminal.index += closeTag.length + 1;
-         } else {
-            Terminal.insertingHtml = true;
-
-            var endOfOpenTag = Terminal.text.indexOf(">", Terminal.index);
-            var startOfCloseTag = Terminal.text.indexOf("<", endOfOpenTag);
-            var endOfCloseTag = Terminal.text.indexOf(">", startOfCloseTag);
-
-            var openTag = Terminal.text.substring(Terminal.index - 1, endOfOpenTag + 1);
-            var closeTag = Terminal.text.substring(startOfCloseTag, endOfCloseTag + 1);
-
-            Terminal.insert(openTag + closeTag);
-
-            Terminal.index += openTag.length - 1;
-         }
-      } else {
+      // if the next character is an html tag
+      else if(Terminal.pending.includes(Terminal.htmlIndicator)) {
+         Terminal.handleHtml();
+         return;
+      } 
+      // it's just a normal character to insert
+      else {
          Terminal.insert(Terminal.pending);
       }
 
@@ -174,9 +200,7 @@ var Terminal = {
 
 Terminal.speed=1;
 Terminal.file="terminalText.txt";
-Terminal.userName = "<span id=\"a\">root@cristianlara</span>:" + 
-                    "<span id=\"b\">~</span>" +
-                    "<span id=\"c\">$</span>"
+Terminal.userName = "cristianlara"
 
 Terminal.init();
 
@@ -186,12 +210,6 @@ startTyping();
 function startTyping() {
    timer = setInterval("type();", 20); //20
 }
-
-// function continueTyping() {
-//    Terminal.insert("<br>");
-//    Terminal.contentOffset += "<br>".length - "\n".length;
-//    timer = setInterval("type();", 20); //20
-// }
 
 function type() {
    Terminal.addText();
