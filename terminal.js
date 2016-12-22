@@ -10,6 +10,14 @@ var Terminal = {
    contentOffset:0,     // the offset in the content compared to the textfile
 
    /**
+   * These special characters indicate specific actions for the Terminal
+   * \n : insert <br>
+   * ~  : insert terminal prompt
+   * `  : pause before typing more
+   */
+   specialCharacters:["\n", "~", "`"],
+
+   /**
    * init()
    * Starts cursor blinking, reads textfile and stores in Terminal.text
    */
@@ -52,6 +60,30 @@ var Terminal = {
    },
 
    /**
+   * handleSpecialCharacter(char)
+   * handle special characters with the following actions
+   *
+   * \n : insert <br> tag
+   * ~  : insert terminal prompt
+   * `  : pause before typing more
+   */
+   handleSpecialCharacter:function(char) {
+      if(char.includes("\n")) {
+         Terminal.insert("<br>");
+         Terminal.contentOffset += "<br>".length - "\n".length;
+      }
+      else if(char.includes("~")) {
+         Terminal.insert(Terminal.userName);
+         Terminal.contentOffset += Terminal.userName.length - "~".length;
+      }
+      else if(char.includes("`")) {
+         Terminal.contentOffset -= 1;
+         clearInterval(timer);
+         setTimeout(startTyping, 500);
+      }
+   },
+
+   /**
    * addText()
    * Goes through the text file typing it out into the Terminal.
    * Recognizes html and adds the tags before typing out the inner content.
@@ -64,20 +96,8 @@ var Terminal = {
       Terminal.pending = Terminal.text.substring(
          Terminal.index - Terminal.speed, Terminal.index);
 
-      console.log(Terminal.pending);
-
-      // if the next character is a line break, replace it with a <br> tag
-      // makes the content 3 characters longer than the text file
-      if(Terminal.pending.includes("\n")) {
-         clearInterval(timer);
-         setTimeout(continueTyping, 200);
-
-         // Terminal.insert("<br>");
-         // Terminal.contentOffset += "<br>".length - "\n".length;
-         return;
-      } else if(Terminal.pending.includes("~")) {
-         Terminal.insert(Terminal.userName);
-         Terminal.contentOffset += Terminal.userName.length - "~".length;
+      if(Terminal.specialCharacters.includes(Terminal.pending)) {
+         Terminal.handleSpecialCharacter(Terminal.pending);
          return;
       }
 
@@ -99,8 +119,6 @@ var Terminal = {
             var openTag = Terminal.text.substring(Terminal.index - 1, endOfOpenTag + 1);
             var closeTag = Terminal.text.substring(startOfCloseTag, endOfCloseTag + 1);
 
-            console.log(openTag + "  " + closeTag);
-
             Terminal.insert(openTag + closeTag);
 
             Terminal.index += openTag.length - 1;
@@ -109,7 +127,6 @@ var Terminal = {
          Terminal.insert(Terminal.pending);
       }
 
-      console.log(Terminal.content());
       window.scrollBy(0,50); // scroll to make sure bottom is always visible
       
    },
@@ -170,11 +187,11 @@ function startTyping() {
    timer = setInterval("type();", 20); //20
 }
 
-function continueTyping() {
-   Terminal.insert("<br>");
-   Terminal.contentOffset += "<br>".length - "\n".length;
-   timer = setInterval("type();", 20); //20
-}
+// function continueTyping() {
+//    Terminal.insert("<br>");
+//    Terminal.contentOffset += "<br>".length - "\n".length;
+//    timer = setInterval("type();", 20); //20
+// }
 
 function type() {
    Terminal.addText();

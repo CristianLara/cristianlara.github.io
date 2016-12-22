@@ -1,4 +1,6 @@
-~ ./resume
+starting terminal.`.`.````
+
+~`` ./resume```
 
 Cristian Lara
 <a href="mailto:cristianlara@stanford.edu">cristianlara@stanford.edu</a>
