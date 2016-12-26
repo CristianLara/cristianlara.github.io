@@ -1,0 +1,19 @@
+
+~`` cat resume.java```                                                          
+
+%
+
+
+<span class="javaVariable">public class</span> CristianLara <span class="javaVariable">extends</span> StanfordStudent {``
+
+    <span class="javaVariable">String</span> major = "<span class="javaString">Computer Science</span>";
+    <span class="javaVariable">String</span> track = "<span class="javaString">Human-Computer Interaction</span>";``
+
+    <span class="javaVariable">String</span>[] interests = [`
+    	"<span class="javaString">Mobile Development</span>",
+    	"<span class="javaString">Web Development</span>",
+    	"<span class="javaString">iOS Development</span>",
+    	"<span class="javaString">Designing/Implementing UI</span>",
+    ];
+
+}

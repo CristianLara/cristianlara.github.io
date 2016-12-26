@@ -1,25 +1,53 @@
 body {
-   background-color: #000
+   background-color: #16191b;
+   /*background-color: #000;*/
+   font-family: 'Roboto Mono', monospace;
+   font-style: normal;
+   font-weight: 300;
 }
 #console {
-   font-family: courier, monospace;
+   /*background-color: #000;*/
+   font-family: 'Roboto Mono', monospace;
    color: #fff;
+   /*width: 50%;*/
+   word-wrap: normal;
+   max-width: 800px;
    width:750px;
    margin-left:auto;
    margin-right:auto;
    margin-top:100px;
    font-size:14px;
 }
-a {
+a {  /*links*/
    color: #0bc;
    text-decoration: none;
 }
-#a {
+.a { /*terminal green*/
    color: #0f0;
 }
-#c {
+.c { /*red*/
    color: #0bc;
 }
-#b {
+.b { /*blue*/
    color: #ff0096;
+}
+
+.title {
+   font-family: courier;
+}
+
+.light {
+   color: #e2e6e8;
+}
+
+.javaVariable { /*magenta*/
+   color: #ff00ff;
+}
+
+.javaString { /*blue*/
+   color: #00ffff;
+}
+
+.bash {
+   color: #0bc;
 }
