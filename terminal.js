@@ -66,6 +66,20 @@ var Terminal = {
       $("#console").html("");
    },
 
+   acceptText:function() {
+      document.addEventListener("keypress", function(event) {
+          event.preventDefault();
+          // console.log("pressed: " + String.fromCharCode(event.which) + "\n");
+          if ((event.which >= 48 && event.which <= 57) || (event.which >= 65 && event.which <= 122)) {
+            console.log("pressed: " + String.fromCharCode(event.which) + "\n");
+            Terminal.write(String.fromCharCode(event.which));
+          }
+          if (event.which == 13) {
+            console.log("enter")
+          }    
+      });
+   },
+
    /**
    * handleSpecialCharacter(char)
    * handle special characters with the following actions
@@ -87,6 +101,7 @@ var Terminal = {
                       "<span class=\"c\">$</span>";
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
+         Terminal.acceptText();
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= 1;
@@ -160,9 +175,9 @@ var Terminal = {
       } 
       // it's just a normal character to insert
       else {
-         console.log(Terminal.pending);
+         // console.log(Terminal.pending);
          Terminal.insert(Terminal.pending);
-         console.log(Terminal.content());
+         // console.log(Terminal.content());
       }
 
       window.scrollBy(0,50); // scroll to make sure bottom is always visible

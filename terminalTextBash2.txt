@@ -1,8 +1,15 @@
-<span class="title">%</span>
+<pre class="title">%</pre>
 ```$`` ./welcome````
 
 I'm an undergraduate at Stanford University, class of '18. I have a passion for tinkering, designing, and programming. One of my biggest interests is the intersection of design and mobile. If I don't have homework for whatever reason, you'll likely find me tinkering with the theme on my jailbroken phone.`
 
 I used to create and sell themes for jailbroken iPhones, was an intern at Cyanogen, and am currently working at Stanford's High Performance Computing Center.`
 
-I'm currently seeking summer software internship opportunites.``
+I'm currently seeking summer software internship opportunites.```
+
+Pick an option:``
+[<span class="b">1</span>] Display web friendly resume
+[<span class="b">2</span>] Download resume pdf
+[<span class="b">3</span>] Contact me
+
+$ [<span class="b">1-3</span>]
