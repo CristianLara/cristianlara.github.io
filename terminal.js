@@ -12,6 +12,7 @@ var Terminal = {
    pauseDuration:500,   // duration of pause action in milliseconds
    htmlIndicator:"<",   // character indicating that we have encountered html
    acceptingInput:false, // boolean indicating if accepting user input
+   input:"",
    
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
@@ -75,22 +76,30 @@ var Terminal = {
    */
    addInputListener:function() {
       document.addEventListener("keypress", function(event) {
-          event.preventDefault();
-             if(Terminal.acceptingInput) {
-               Terminal.removeCursor();
-               //console.log("pressed: "+String.fromCharCode(event.which)+"\n");
-                if ((event.which >= 48 && event.which <= 57) ||
-                    (event.which >= 65 && event.which <= 122) ||
-                    (event.which == 32)) {
-                  console.log("pressed: " +
-                               String.fromCharCode(event.which) + "\n");
-
-                  Terminal.write(String.fromCharCode(event.which));
-                }
-                if (event.which == 13) {
-                  console.log("enter")
-                } 
-          }   
+            event.preventDefault();
+            if(Terminal.acceptingInput) {
+               character = String.fromCharCode(event.which);
+               // if (character == ' ') return;
+               if (event.which == 13) {
+                  // Terminal.acceptingInput = false;
+                  console.log("Your input was: " + Terminal.input);
+               }
+               else if (event.which == 8) { // backspace
+                  if(Terminal.input.length > 0) {
+                     Terminal.removeCursor();
+                     Terminal.removeLastCharacter();
+                     length = Terminal.input.length;
+                     Terminal.input = Terminal.input.substring(0, length - 1);                     
+                  }
+               }
+               else if ((character >= 0 && character <= 9) ||
+                    (character >= 'a' && character <= 'z')) {
+                  Terminal.removeCursor();
+                  console.log("pressed: " + character + "\n");
+                  Terminal.write(character);
+                  Terminal.input += character;
+               }
+            }   
       });
    },
 
