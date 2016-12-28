@@ -2,7 +2,7 @@ var Terminal = {
 
    userName:"",
    text:"",             // to contain the content of the text file
-   asciiArt:"",
+   asciiArt:"",         // name of text file with ascii art (my name)
    index:0,             // current cursor position
    speed:1,             // number of letters to add at a time
    file:"",             // name of text file to get text from
@@ -11,10 +11,11 @@ var Terminal = {
    contentOffset:0,     // the offset in the content compared to the textfile
    pauseDuration:500,   // duration of pause action in milliseconds
    htmlIndicator:"<",   // character indicating that we have encountered html
+   acceptingInput:false, // boolean indicating if accepting user input
    
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
-   specialCharacters:["\n", "\\", "`", "$", "%"],
+   specialCharacters:["\n", "\\", "`", "$", "%", "^"],
 
    /**
    * init()
@@ -25,6 +26,7 @@ var Terminal = {
       $.get(Terminal.file,function(data){
          Terminal.text = data; // save the textfile in Terminal.text
       });
+      Terminal.addInputListener();
    },
 
    /**
@@ -66,17 +68,29 @@ var Terminal = {
       $("#console").html("");
    },
 
-   acceptText:function() {
+
+   /**
+   * clear()
+   * clears the terminal
+   */
+   addInputListener:function() {
       document.addEventListener("keypress", function(event) {
           event.preventDefault();
-          // console.log("pressed: " + String.fromCharCode(event.which) + "\n");
-          if ((event.which >= 48 && event.which <= 57) || (event.which >= 65 && event.which <= 122)) {
-            console.log("pressed: " + String.fromCharCode(event.which) + "\n");
-            Terminal.write(String.fromCharCode(event.which));
-          }
-          if (event.which == 13) {
-            console.log("enter")
-          }    
+             if(Terminal.acceptingInput) {
+               Terminal.removeCursor();
+               //console.log("pressed: "+String.fromCharCode(event.which)+"\n");
+                if ((event.which >= 48 && event.which <= 57) ||
+                    (event.which >= 65 && event.which <= 122) ||
+                    (event.which == 32)) {
+                  console.log("pressed: " +
+                               String.fromCharCode(event.which) + "\n");
+
+                  Terminal.write(String.fromCharCode(event.which));
+                }
+                if (event.which == 13) {
+                  console.log("enter")
+                } 
+          }   
       });
    },
 
@@ -96,12 +110,16 @@ var Terminal = {
          Terminal.contentOffset += "<br>".length - "\n".length;
       }
       else if(char.includes("$")) {
-         var prompt = "<span class=\"a\">root@" + Terminal.userName + "</span>:" + 
+         var prompt = "<span class=\"a\">root@" +Terminal.userName +"</span>:"+ 
                       "<span class=\"b\">~</span>" +
                       "<span class=\"c\">$</span>";
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
-         Terminal.acceptText();
+         Terminal.acceptingInput = true;
+      }
+      else if(char.includes("^")) {
+         Terminal.contentOffset -= "^".length;
+         Terminal.acceptingInput = false;
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= 1;
