@@ -13,4 +13,4 @@ Pick an option:``
 [<span class="b">2</span>] Download resume pdf
 [<span class="b">3</span>] Contact me
 
-$ [<span class="b">1-3</span>]
+$ [<span class="b">1-3</span>] 
