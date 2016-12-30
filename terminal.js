@@ -71,8 +71,8 @@ var Terminal = {
 
 
    /**
-   * clear()
-   * clears the terminal
+   * addInputListener()
+   * adds a keyboard listener to allow input to the terminal
    */
    addInputListener:function() {
       document.addEventListener("keypress", function(event) {
@@ -132,7 +132,7 @@ var Terminal = {
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= 1;
-         clearInterval(timer);
+         stopTyping();
          setTimeout(startTyping, Terminal.pauseDuration);
       }
       else if(char.includes("\\")) {
@@ -211,6 +211,10 @@ var Terminal = {
       
    },
 
+   printResume:function() {
+
+   },
+
    /**
    * removeLastCharacter()
    * removes the last character in the Terminal's content
@@ -265,9 +269,31 @@ function startTyping() {
    timer = setInterval("type();", 3);
 }
 
+function stopTyping() {
+   clearInterval(timer);
+}
+
+function addLinkActions() {
+   $("#console").on('click', "#one", function() {
+      console.log("writing 1");
+      Terminal.write("1");
+      Terminal.printResume();
+   });
+   $("#console").on('click', "#two", function() {
+      Terminal.write("2");
+      downloadResume();
+      return false;
+   });
+   $("#console").on('click', "#three", function() {
+      Terminal.write("3");
+      // TODO
+   });
+}
+
 function type() {
    Terminal.addText();
    if (Terminal.index > Terminal.text.length) {
-      clearInterval(timer);
+      stopTyping();
+      addLinkActions();
    }
 }

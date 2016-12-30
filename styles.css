@@ -6,10 +6,8 @@ body {
    font-weight: 300;
 }
 #console {
-   /*background-color: #000;*/
    font-family: 'Roboto Mono', monospace;
    color: #fff;
-   /*width: 50%;*/
    word-wrap: normal;
    max-width: 800px;
    width:750px;
@@ -18,18 +16,23 @@ body {
    margin-top:100px;
    font-size:14px;
 }
-a {  /*links*/
+
+a:hover {
    color: #0bc;
+}
+
+a {  /*links*/
+   color: #fff;
    text-decoration: none;
 }
 .a { /*terminal green*/
    color: #0f0;
 }
-.c { /*blue*/
-   color: #0bc;
-}
 .b { /*magenta*/
    color: #ff0096;
+}
+.c { /*blue*/
+   color: #0bc;
 }
 
 .title {
