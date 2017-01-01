@@ -1,10 +1,10 @@
 body {
    background-color: #16191b;
-   /*background-color: #000;*/
    font-family: 'Roboto Mono', monospace;
    font-style: normal;
    font-weight: 300;
 }
+
 #console {
    font-family: 'Roboto Mono', monospace;
    color: #fff;

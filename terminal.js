@@ -1,7 +1,7 @@
 var Terminal = {
 
    userName:"",
-   text:"",             // to contain the content of the text file
+   text:"",              // to contain the content of the text file
    asciiArt:"",         // name of text file with ascii art (my name)
    index:0,             // current cursor position
    speed:1,             // number of letters to add at a time
@@ -13,7 +13,7 @@ var Terminal = {
    htmlIndicator:"<",   // character indicating that we have encountered html
    acceptingInput:false, // boolean indicating if accepting user input
    input:"",
-   
+
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
    specialCharacters:["\n", "\\", "`", "$", "%", "^"],
@@ -28,6 +28,28 @@ var Terminal = {
          Terminal.text = data; // save the textfile in Terminal.text
       });
       Terminal.addInputListener();
+
+      //add click actions for links before they're even added
+      $(window).on('load', function() {
+         $("#console").on('click', "#one", function() {
+            console.log("writing 1");
+            Terminal.write("1");
+            Terminal.input += "1";
+            Terminal.write('\n');
+            Terminal.printResume();
+         });
+         $("#console").on('click', "#two", function() {
+            Terminal.write("2");
+            Terminal.input += "2";
+            downloadResume();
+            return false;
+         });
+         $("#console").on('click', "#three", function() {
+            Terminal.write("3");
+            Terminal.input += "3";
+            // TODO
+         });
+      });
    },
 
    /**
@@ -43,6 +65,7 @@ var Terminal = {
    * appends str to the end of the terminal
    */
    write:function(str) {
+      Terminal.removeCursor();
       $("#console").append(str);
       return false;
    },
@@ -52,6 +75,7 @@ var Terminal = {
    * appends str to the end of the terminal
    */
    insert:function(str) {
+      Terminal.removeCursor();
       var content = Terminal.content();
       var contentBefore = 
          content.substring(0, Terminal.index + Terminal.contentOffset - 1);
@@ -79,10 +103,12 @@ var Terminal = {
             event.preventDefault();
             if(Terminal.acceptingInput) {
                character = String.fromCharCode(event.which);
-               // if (character == ' ') return;
                if (event.which == 13) {
-                  // Terminal.acceptingInput = false;
+                  Terminal.acceptingInput = false;
                   console.log("Your input was: " + Terminal.input);
+                  if (Terminal.input == "1") {
+                     Terminal.printResume();
+                  }
                }
                else if (event.which == 8) { // backspace
                   if(Terminal.input.length > 0) {
@@ -95,7 +121,6 @@ var Terminal = {
                else if ((character >= 0 && character <= 9) ||
                     (character >= 'a' && character <= 'z')) {
                   Terminal.removeCursor();
-                  console.log("pressed: " + character + "\n");
                   Terminal.write(character);
                   Terminal.input += character;
                }
@@ -212,7 +237,10 @@ var Terminal = {
    },
 
    printResume:function() {
-
+      $.get(Terminal.resume,function(resumeData){
+         Terminal.text += resumeData;
+         startTyping();
+      });
    },
 
    /**
@@ -257,6 +285,7 @@ var Terminal = {
 }
 
 Terminal.file="terminalTextBash2.txt";
+Terminal.resume="terminalTextBash.txt";
 Terminal.asciiArt="asciiArt.txt";
 Terminal.userName = "cristianlara"
 
@@ -273,27 +302,13 @@ function stopTyping() {
    clearInterval(timer);
 }
 
-function addLinkActions() {
-   $("#console").on('click', "#one", function() {
-      console.log("writing 1");
-      Terminal.write("1");
-      Terminal.printResume();
-   });
-   $("#console").on('click', "#two", function() {
-      Terminal.write("2");
-      downloadResume();
-      return false;
-   });
-   $("#console").on('click', "#three", function() {
-      Terminal.write("3");
-      // TODO
-   });
-}
-
 function type() {
    Terminal.addText();
    if (Terminal.index > Terminal.text.length) {
       stopTyping();
-      addLinkActions();
    }
+}
+
+function downloadResume() {
+   // TODO
 }
