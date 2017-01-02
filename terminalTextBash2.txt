@@ -3,12 +3,9 @@
 
 I'm an undergraduate at Stanford University, class of '18. I have a passion for tinkering, designing, and programming. One of my biggest interests is the intersection of design and mobile. If I don't have homework for whatever reason, you'll likely find me tinkering with the theme on my jailbroken phone.`
 
-I used to create and sell themes for jailbroken iPhones, was an intern at Cyanogen, and am currently working at Stanford's High Performance Computing Center.`
-
-I'm currently seeking summer software internship opportunities.```
+I used to create and sell themes for jailbroken iPhones, was an intern at Cyanogen, and am currently working at Stanford's High Performance Computing Center. Currently seeking summer software internship opportunities.```
 
 Click/Enter an option:``
-
 <a id="one" href="#"><span class="c">[1]</span> Display web friendly resume</a>
 <a id="two" href="#"><span class="c">[2]</span> Download resume pdf</a>
 <a id="three" href="#"><span class="c">[3]</span> Contact me</a>
