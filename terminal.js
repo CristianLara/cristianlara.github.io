@@ -107,6 +107,7 @@ var Terminal = {
                   Terminal.acceptingInput = false;
                   console.log("Your input was: " + Terminal.input);
                   if (Terminal.input == "1") {
+                     Terminal.input = "";
                      Terminal.printResume();
                   }
                }
