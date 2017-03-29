@@ -44,11 +44,11 @@ var Terminal = {
          //    downloadResume();
          //    return false;
          // });
-         $("#console").on('click', "#three", function() {
-            Terminal.write("3");
-            Terminal.input += "3";
-            // TODO
-         });
+         // $("#console").on('click', "#three", function() {
+         //    Terminal.write("3");
+         //    Terminal.input += "3";
+         //    // TODO
+         // });
       });
    },
 
@@ -110,6 +110,14 @@ var Terminal = {
                   if (Terminal.input == "1") {
                      Terminal.input = "";
                      Terminal.printResume();
+                  }
+                  if (Terminal.input == "2") {
+                     downloadResume();
+                     Terminal.acceptingInput = true;
+                  }
+                  if (Terminal.input == "3") {
+                     emailMe();
+                     Terminal.acceptingInput = true;
                   }
                   else {
                      Terminal.acceptingInput = true;
@@ -315,5 +323,9 @@ function type() {
 }
 
 function downloadResume() {
-   // TODO
+   document.getElementById("two").click();
+}
+
+function emailMe() {
+   document.getElementById("three").click();
 }
