@@ -32,7 +32,7 @@ var Terminal = {
       //add click actions for links before they're even added
       $(window).on('load', function() {
          $("#console").on('click', "#one", function() {
-            console.log("writing 1");
+            Terminal.clearInput();
             Terminal.write("1");
             Terminal.input += "1";
             Terminal.write('\n');
@@ -139,6 +139,15 @@ var Terminal = {
                }
             }   
       });
+   },
+
+   clearInput:function() {
+      while(Terminal.input.length > 0) {
+            Terminal.removeCursor();
+            Terminal.removeLastCharacter();
+            length = Terminal.input.length;
+            Terminal.input = Terminal.input.substring(0, length - 1); 
+      }
    },
 
    /**
@@ -270,8 +279,8 @@ var Terminal = {
    * returns true if the cursor is being displayed, false otehrwise
    */
    cursorIsOn:function() {
-    var content = Terminal.content();
-        return content.substring(content.length - 1, content.length) == "|";
+      var content = Terminal.content();
+      return content.substring(content.length - 1, content.length) == "|";
    },
 
    /**
