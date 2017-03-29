@@ -38,12 +38,12 @@ var Terminal = {
             Terminal.write('\n');
             Terminal.printResume();
          });
-         $("#console").on('click', "#two", function() {
-            Terminal.write("2");
-            Terminal.input += "2";
-            downloadResume();
-            return false;
-         });
+         // $("#console").on('click', "#two", function() {
+         //    Terminal.write("2");
+         //    Terminal.input += "2";
+         //    downloadResume();
+         //    return false;
+         // });
          $("#console").on('click', "#three", function() {
             Terminal.write("3");
             Terminal.input += "3";
@@ -300,7 +300,7 @@ var timer = null;
 startTyping();
 
 function startTyping() {
-   timer = setInterval("type();", 3);
+   timer = setInterval("type();", 1);
 }
 
 function stopTyping() {
