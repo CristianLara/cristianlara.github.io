@@ -72,7 +72,8 @@ var Terminal = {
 
    /**
    * insert(str)
-   * appends str to the end of the terminal
+   * inserts strings into the current place of the cursor
+   * this is useful for inserting text between html tags
    */
    insert:function(str) {
       Terminal.removeCursor();
@@ -87,7 +88,7 @@ var Terminal = {
 
    /**
    * clear()
-   * clears the terminal
+   * clears the terminal of all text and html
    */
    clear:function() {
       $("#console").html("");
@@ -109,6 +110,9 @@ var Terminal = {
                   if (Terminal.input == "1") {
                      Terminal.input = "";
                      Terminal.printResume();
+                  }
+                  else {
+                     Terminal.acceptingInput = true;
                   }
                }
                else if (event.which == 8) { // backspace
@@ -274,7 +278,7 @@ var Terminal = {
 
    /**
    * blink()
-   * blink th cursor by removing and readding it
+   * blink the cursor by removing and reading it
    */
    blink:function(){
       var content = Terminal.content();
