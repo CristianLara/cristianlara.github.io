@@ -289,9 +289,9 @@ var Terminal = {
    }
 }
 
-Terminal.file="terminalTextBash2.txt";
-Terminal.resume="terminalTextBash.txt";
-Terminal.asciiArt="asciiArt.txt";
+Terminal.file="text/intro.txt";
+Terminal.resume="text/resume.txt";
+Terminal.asciiArt="text/asciiArt.txt";
 Terminal.userName = "cristianlara"
 
 Terminal.init();
