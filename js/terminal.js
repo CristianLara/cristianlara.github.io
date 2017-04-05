@@ -28,9 +28,11 @@ var Terminal = {
    */
    init:function() {
       setInterval(function(){Terminal.blink();},500); // start cursor blink
+
       $.get(Terminal.file,function(data){
          Terminal.text = data; // save the textfile in Terminal.text
       });
+
       Terminal.addInputListener();
 
       //add click actions for links before they're even added
@@ -42,17 +44,6 @@ var Terminal = {
             Terminal.write('\n');
             Terminal.printResume();
          });
-         // $("#console").on('click', "#two", function() {
-         //    Terminal.write("2");
-         //    Terminal.input += "2";
-         //    downloadResume();
-         //    return false;
-         // });
-         // $("#console").on('click', "#three", function() {
-         //    Terminal.write("3");
-         //    Terminal.input += "3";
-         //    // TODO
-         // });
       });
    },
 
@@ -111,15 +102,10 @@ var Terminal = {
 
                // User hit enter
                if (event.which == Terminal.keycode.ENTER) {
+                  Terminal.acceptingInput = false;
                   console.log("Your input was: " + Terminal.input);
                   Terminal.contentOffset--;
-                  if (Terminal.input == "1111") {
-                     Terminal.acceptingInput = false;
-                     Terminal.clearInput();
-                     Terminal.printResume();
-                  }
-                  else if (Terminal.input == "1") {
-                     Terminal.acceptingInput = false;
+                  if (Terminal.input == "1") {
                      Terminal.input = "";
                      Terminal.printResume();
                   }
@@ -155,7 +141,14 @@ var Terminal = {
                   Terminal.input += character;
                   Terminal.contentOffset++;
                }
-            }   
+            }
+            // skip animation
+            else {
+               //TODO
+               // clearInterval(timer);
+               // $("#console").html(Terminal.text);
+               // Terminal.acceptingInput = true;
+            }
       });
    },
 
@@ -229,7 +222,7 @@ var Terminal = {
       else if(char.includes("%")) {
          clearInterval(timer);
          $.get(Terminal.asciiArt,function(data){
-            Terminal.insert(data); // save the textfile in Terminal.text
+            Terminal.insert(data);
             Terminal.contentOffset += data.length - 1;
             startTyping();
          });
