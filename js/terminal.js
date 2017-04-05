@@ -2,17 +2,20 @@ var Terminal = {
 
    userName:"",
    text:"",              // to contain the content of the text file
-   asciiArt:"",         // name of text file with ascii art (my name)
-   index:0,             // current cursor position
-   speed:1,             // number of letters to add at a time
-   file:"",             // name of text file to get text from
-   pending:"",          // pending string of text to type
-   insertingHtml:false, // indicates if we are inserting text between html tags
-   contentOffset:0,     // the offset in the content compared to the textfile
-   pauseDuration:500,   // duration of pause action in milliseconds
-   htmlIndicator:"<",   // character indicating that we have encountered html
-   acceptingInput:false, // boolean indicating if accepting user input
-   input:"",
+   asciiArt:"",          // name of text file with ascii art (my name)
+   index:0,              // current cursor position in the text to add
+   speed:1,              // number of letters to add at a time
+   file:"",              // name of text file to get text from
+   pending:"",           // pending string of text to type
+   insertingHtml:false,  // indicates if we are inserting text between html tags
+   contentOffset:0,      // the offset in the content compared to the textfile
+   pauseDuration:500,    // duration of pause action in milliseconds
+   htmlIndicator:"<",    // character indicating that we have encountered html
+   acceptingInput:false, // indicating if accepting user input
+   input:"",             // input text from user
+
+   // keycode constants
+   keycode:Object.freeze({ENTER: 13, BACKSPACE: 8}),
 
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
@@ -21,6 +24,7 @@ var Terminal = {
    /**
    * init()
    * Starts cursor blinking, reads textfile and stores in Terminal.text
+   * Adds click events to action links
    */
    init:function() {
       setInterval(function(){Terminal.blink();},500); // start cursor blink
@@ -73,7 +77,7 @@ var Terminal = {
    /**
    * insert(str)
    * inserts strings into the current place of the cursor
-   * this is useful for inserting text between html tags
+   * this is primarily for inserting text between html tags
    */
    insert:function(str) {
       Terminal.removeCursor();
@@ -104,42 +108,60 @@ var Terminal = {
             event.preventDefault();
             if(Terminal.acceptingInput) {
                character = String.fromCharCode(event.which);
-               if (event.which == 13) {
-                  Terminal.acceptingInput = false;
+
+               // User hit enter
+               if (event.which == Terminal.keycode.ENTER) {
                   console.log("Your input was: " + Terminal.input);
-                  if (Terminal.input == "1") {
+                  Terminal.contentOffset--;
+                  if (Terminal.input == "1111") {
+                     Terminal.acceptingInput = false;
                      Terminal.input = "";
+                     Terminal.index;
                      Terminal.printResume();
                   }
-                  if (Terminal.input == "2") {
-                     downloadResume();
-                     Terminal.acceptingInput = true;
+                  else if (Terminal.input == "1") {
+                     Terminal.acceptingInput = false;
+                     Terminal.input = "";
+                     // Terminal.index--;
+                     Terminal.printResume();
                   }
-                  if (Terminal.input == "3") {
+                  else if (Terminal.input == "2") {
+                     downloadResume();
+                  }
+                  else if (Terminal.input == "3") {
                      emailMe();
-                     Terminal.acceptingInput = true;
                   }
                   else {
-                     Terminal.acceptingInput = true;
+                     Terminal.showError(1);
+                     Terminal.input = "";
                   }
                }
-               else if (event.which == 8) { // backspace
+
+               // User hit backspace
+               else if (event.which == Terminal.keycode.BACKSPACE) {
                   if(Terminal.input.length > 0) {
                      Terminal.removeCursor();
                      Terminal.removeLastCharacter();
+                     Terminal.contentOffset--;
                      length = Terminal.input.length;
                      Terminal.input = Terminal.input.substring(0, length - 1);                     
                   }
                }
+
+               // User hit an alpha-numeric key
                else if ((character >= 0 && character <= 9) ||
-                    (character >= 'a' && character <= 'z')) {
+                        (character >= 'a' && character <= 'z')) {
                   Terminal.removeCursor();
                   Terminal.write(character);
                   Terminal.input += character;
+                  Terminal.contentOffset++;
+                  // Terminal.index++;
                }
             }   
       });
    },
+
+
 
    clearInput:function() {
       while(Terminal.input.length > 0) {
@@ -147,6 +169,13 @@ var Terminal = {
             Terminal.removeLastCharacter();
             length = Terminal.input.length;
             Terminal.input = Terminal.input.substring(0, length - 1); 
+      }
+   },
+
+   showError:function(errorCode) {
+      if(errorCode == 1) {
+         Terminal.text += "  <span class=\"b\">enter number between 1 and 3</span>\n $";
+         startTyping();
       }
    },
 
@@ -168,7 +197,7 @@ var Terminal = {
       else if(char.includes("$")) {
          var prompt = "<span class=\"a\">root@" +Terminal.userName +"</span>:"+ 
                       "<span class=\"b\">~</span>" +
-                      "<span class=\"c\">$</span>";
+                      "<span class=\"c\">$</span> ";
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
          Terminal.acceptingInput = true;
@@ -236,8 +265,6 @@ var Terminal = {
 
       Terminal.index += Terminal.speed;
       Terminal.pending = Terminal.text.charAt(Terminal.index - 1);
-      // Terminal.pending = Terminal.text.substring(
-         // Terminal.index - Terminal.speed, Terminal.index);
 
       // if the next character indicates an action
       if(Terminal.specialCharacters.includes(Terminal.pending)) {

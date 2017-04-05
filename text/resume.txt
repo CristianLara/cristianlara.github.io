@@ -22,9 +22,9 @@
  <span class="b">-</span> wearables
  <span class="b">-</span> internet of things
  <span class="b">-</span> arduino
+ <span class="b">-</span> ping pong
  <span class="b">-</span> working with my hands
  <span class="b">-</span> things that actually help people``
- <span class="b">-</span> ping pong
 
 
 <span class="a">-----------------------------------------
@@ -41,4 +41,9 @@
    iPhone Theme Designer and Software Developer <span class="b">/</span> May 2011 - February 2013
 </pre>
 
-$ <span class="c">[1-3]</span> 
+Click/Enter an option:
+<a id="one" href="#"><span class="c">[1]</span> Display web friendly resume</a>
+<a id="two" href="files/resume_cristianlara.pdf" title="resume_cristianlara.pdf" target="_blank"><span class="c">[2]</span> Download resume pdf</a>
+<a id="three" href="mailto:cristianlara@stanford.edu"><span class="c">[3]</span> Contact me</a>
+
+$
