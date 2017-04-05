@@ -6,7 +6,7 @@ I'm an undergraduate at Stanford University, class of '18. I have a passion for 
 I used to create and sell themes for jailbroken iPhones, was a software intern at Cyanogen, and am currently working at Stanford's High Performance Computing Center. I'm currently seeking summer software internship opportunities.```
 
 Click/Enter an option:
-<a id="one" href="#"><span class="c">[1]</span> Display web friendly resume</a>
+<a id="one" href="#"><span class="c">[1]</span> Display web formatted resume</a>
 <a id="two" href="files/resume_cristianlara.pdf" title="resume_cristianlara.pdf" target="_blank"><span class="c">[2]</span> Download resume pdf</a>
 <a id="three" href="mailto:cristianlara@stanford.edu"><span class="c">[3]</span> Contact me</a>
 

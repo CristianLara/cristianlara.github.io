@@ -115,25 +115,24 @@ var Terminal = {
                   Terminal.contentOffset--;
                   if (Terminal.input == "1111") {
                      Terminal.acceptingInput = false;
-                     Terminal.input = "";
-                     Terminal.index;
+                     Terminal.clearInput();
                      Terminal.printResume();
                   }
                   else if (Terminal.input == "1") {
                      Terminal.acceptingInput = false;
                      Terminal.input = "";
-                     // Terminal.index--;
                      Terminal.printResume();
                   }
                   else if (Terminal.input == "2") {
+                     Terminal.showMessage(2);
                      downloadResume();
                   }
                   else if (Terminal.input == "3") {
+                     Terminal.showMessage(3);
                      emailMe();
                   }
                   else {
-                     Terminal.showError(1);
-                     Terminal.input = "";
+                     Terminal.showMessage(-1);
                   }
                }
 
@@ -155,7 +154,6 @@ var Terminal = {
                   Terminal.write(character);
                   Terminal.input += character;
                   Terminal.contentOffset++;
-                  // Terminal.index++;
                }
             }   
       });
@@ -164,19 +162,32 @@ var Terminal = {
 
 
    clearInput:function() {
-      while(Terminal.input.length > 0) {
-            Terminal.removeCursor();
-            Terminal.removeLastCharacter();
-            length = Terminal.input.length;
-            Terminal.input = Terminal.input.substring(0, length - 1); 
-      }
+      Terminal.offset -= Terminal.input.length;
+      Terminal.input = "";
    },
 
-   showError:function(errorCode) {
-      if(errorCode == 1) {
-         Terminal.text += "  <span class=\"b\">enter number between 1 and 3</span>\n $";
-         startTyping();
+   showMessage:function(code) {
+      switch(code) {
+         // download resume
+         case 2:
+            Terminal.text += " \ndownloading resume...\n\n$";
+            break;
+
+         // Contact me
+         case 3:
+            Terminal.text += " \ncontacting me at cristianlara@stanford.edu...\n\n$";
+            break;
+
+         // Error code
+         case (-1):
+            Terminal.text += " \n<span class=\"b\">enter number between 1 and 3...</span>\n\n$";
+            break;
+
+         default:
+            break;
       }
+      startTyping();
+      Terminal.clearInput();
    },
 
    /**
