@@ -39,9 +39,10 @@ var Terminal = {
       $(window).on('load', function() {
          $("#console").on('click', "#one", function() {
             Terminal.clearInput();
-            Terminal.write("1");
-            Terminal.input += "1";
+            // Terminal.write("1");
+            // Terminal.input += "1";
             Terminal.write('\n');
+            Terminal.acceptingInput = false;
             Terminal.printResume();
          });
       });
@@ -173,7 +174,7 @@ var Terminal = {
 
          // Error code
          case (-1):
-            Terminal.text += " \n<span class=\"b\">enter number between 1 and 3...</span>\n\n$";
+            Terminal.text += " \n<span class=\"error\">enter number between 1 and 3...</span>\n\n$";
             break;
 
          default:

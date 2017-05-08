@@ -36,6 +36,10 @@ a {  /*links*/
    color: #0bc;
 }
 
+.error {
+   color: #ff0096;
+}
+
 .title {
    font-family: courier;
    line-height: normal;
