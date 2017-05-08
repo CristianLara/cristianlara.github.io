@@ -152,6 +152,7 @@ var Terminal = {
             }
       });
       document.addEventListener("keydown", function(event) {
+         event.preventDefault();
          console.log(event.which);
          if (event.which == 39) {
             Terminal.moveMehran("right");
