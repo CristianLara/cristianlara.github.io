@@ -155,7 +155,7 @@ var Terminal = {
 
       // keyboard listener for sprite control
       document.addEventListener("keydown", function(event) {
-         event.preventDefault();
+         // event.preventDefault();
          stopWalking();
          console.log(event.which);
          if (event.which == 39) {
