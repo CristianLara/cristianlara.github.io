@@ -96,6 +96,7 @@ var Terminal = {
    * adds a keyboard listener to allow input to the terminal
    */
    addInputListener:function() {
+      // keyboard listener for terminal input
       document.addEventListener("keypress", function(event) {
             event.preventDefault();
             if(Terminal.acceptingInput) {
@@ -146,54 +147,57 @@ var Terminal = {
             // skip animation
             else {
                //TODO
-               // clearInterval(timer);
+               // clearInterval(typer);
                // $("#console").html(Terminal.text);
                // Terminal.acceptingInput = true;
             }
       });
+
+      // keyboard listener for sprite control
       document.addEventListener("keydown", function(event) {
          event.preventDefault();
+         stopWalking();
          console.log(event.which);
          if (event.which == 39) {
-            Terminal.moveMehran("right");
+            Terminal.moveSprite("right");
          } else if (event.which == 37) {
-            Terminal.moveMehran("left");
+            Terminal.moveSprite("left");
          } else if (event.which == 40) {
-            Terminal.moveMehran("down");
+            Terminal.moveSprite("down");
          } else if (event.which == 38) {
-            Terminal.moveMehran("up");
+            Terminal.moveSprite("up");
          }
       });
    },
 
-   mehranX:0, mehranY:0, mehranStep:0, mehranStepSize:8,
+   spriteX:775, spriteY:130, step:0, stepSize:8,
 
-   moveMehran:function(direction) {
-      Terminal.mehranStep = (Terminal.mehranStep + 1) % 9;
+   moveSprite:function(direction) {
+      Terminal.step = (Terminal.step + 1) % 9;
 
       switch(direction) {
          case "right":
-            Terminal.mehranX += Terminal.mehranStepSize;
+            Terminal.spriteX += Terminal.stepSize;
             break;
 
          case "left":
-            Terminal.mehranX -= Terminal.mehranStepSize;
+            Terminal.spriteX -= Terminal.stepSize;
             break;
 
          case "down":
-            Terminal.mehranY += Terminal.mehranStepSize;
+            Terminal.spriteY += Terminal.stepSize;
             break;
 
          case "up":
-            Terminal.mehranY -= Terminal.mehranStepSize;
+            Terminal.spriteY -= Terminal.stepSize;
             break;
 
       }
 
-      var mehran = document.getElementById("mehran");
-      mehran.style.left = Terminal.mehranX;
-      mehran.style.top = Terminal.mehranY;
-      mehran.src = "img/me/" + direction + Terminal.mehranStep + ".png";
+      var sprite = document.getElementById("sprite");
+      sprite.style.left = Terminal.spriteX;
+      sprite.style.top = Terminal.spriteY;
+      sprite.src = "img/me/" + direction + Terminal.step + ".png";
    },
 
 
@@ -264,7 +268,7 @@ var Terminal = {
          Terminal.contentOffset = -Terminal.index;
       }
       else if(char.includes("%")) {
-         clearInterval(timer);
+         clearInterval(typer);
          $.get(Terminal.asciiArt,function(data){
             Terminal.insert(data);
             Terminal.contentOffset += data.length - 1;
@@ -388,15 +392,16 @@ Terminal.userName = "cristianlara"
 
 Terminal.init();
 
-var timer = null;
+var typer = null;
+var walker = setInterval("walk();", 100);
 startTyping();
 
 function startTyping() {
-   timer = setInterval("type();", 1);
+   typer = setInterval("type();", 1);
 }
 
 function stopTyping() {
-   clearInterval(timer);
+   clearInterval(typer);
 }
 
 function type() {
@@ -404,6 +409,16 @@ function type() {
    if (Terminal.index > Terminal.text.length) {
       stopTyping();
    }
+}
+
+function walk() {
+   Terminal.step = (Terminal.step + 1) % 9;
+   var sprite = document.getElementById("sprite");
+   sprite.src = "img/me/down" + Terminal.step + ".png";
+}
+
+function stopWalking() {
+   clearInterval(walker);
 }
 
 function downloadResume() {

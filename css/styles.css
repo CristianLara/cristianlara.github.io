@@ -19,10 +19,10 @@ body {
    line-height: 1.5;
 }
 
-#mehran {
+#sprite {
    position: absolute;
-   top: -56px;
-   left: -34px;
+   top: 130px;
+   left: 775px;
    height: 52px;
    width: 30px;
 }
