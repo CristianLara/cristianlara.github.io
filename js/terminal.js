@@ -151,6 +151,48 @@ var Terminal = {
                // Terminal.acceptingInput = true;
             }
       });
+      document.addEventListener("keydown", function(event) {
+         console.log(event.which);
+         if (event.which == 39) {
+            Terminal.moveMehran("right");
+         } else if (event.which == 37) {
+            Terminal.moveMehran("left");
+         } else if (event.which == 40) {
+            Terminal.moveMehran("down");
+         } else if (event.which == 38) {
+            Terminal.moveMehran("up");
+         }
+      });
+   },
+
+   mehranX:0, mehranY:0, mehranStep:0, mehranStepSize:8,
+
+   moveMehran:function(direction) {
+      Terminal.mehranStep = (Terminal.mehranStep + 1) % 9;
+
+      switch(direction) {
+         case "right":
+            Terminal.mehranX += Terminal.mehranStepSize;
+            break;
+
+         case "left":
+            Terminal.mehranX -= Terminal.mehranStepSize;
+            break;
+
+         case "down":
+            Terminal.mehranY += Terminal.mehranStepSize;
+            break;
+
+         case "up":
+            Terminal.mehranY -= Terminal.mehranStepSize;
+            break;
+
+      }
+
+      var mehran = document.getElementById("mehran");
+      mehran.style.left = Terminal.mehranX;
+      mehran.style.top = Terminal.mehranY;
+      mehran.src = "img/me/" + direction + Terminal.mehranStep + ".png";
    },
 
 
