@@ -14,6 +14,7 @@ var Terminal = {
    htmlIndicator:"<",    // character indicating that we have encountered html
    acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
+   typer:null,           // timer for the typing animation
 
    // keycode constants
    keycode:Object.freeze({ENTER: 13, BACKSPACE: 8}),
@@ -47,6 +48,33 @@ var Terminal = {
             Terminal.printResume();
          });
       });
+   },
+
+   /**
+   * startTyping()
+   * begins the Terminal's process of automatically typing text
+   */
+   startTyping:function() {
+      Terminal.typer = setInterval("Terminal.type();", 1);
+   },
+
+   /**
+   * type()
+   * TODO
+   */
+   type:function() {
+      Terminal.addText();
+      if (Terminal.index > Terminal.text.length) {
+         Terminal.stopTyping();
+      }
+   },
+
+   /**
+   * stopTyping()
+   * TODO
+   */
+   stopTyping:function() {
+      clearInterval(Terminal.typer);
    },
 
    /**
@@ -115,11 +143,11 @@ var Terminal = {
                   }
                   else if (Terminal.input == "2") {
                      Terminal.showMessage(2);
-                     downloadResume();
+                     Terminal.downloadResume();
                   }
                   else if (Terminal.input == "3") {
                      Terminal.showMessage(3);
-                     emailMe();
+                     Terminal.emailMe();
                   }
                   else {
                      Terminal.showMessage(-1);
@@ -181,8 +209,16 @@ var Terminal = {
          default:
             break;
       }
-      startTyping();
+      Terminal.startTyping();
       Terminal.clearInput();
+   },
+
+   downloadResume:function() {
+      document.getElementById("two").click();
+   },
+
+   emailMe:function() {
+      document.getElementById("three").click();
    },
 
    /**
@@ -214,19 +250,19 @@ var Terminal = {
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= 1;
-         stopTyping();
-         setTimeout(startTyping, Terminal.pauseDuration);
+         Terminal.stopTyping();
+         setTimeout(Terminal.startTyping, Terminal.pauseDuration);
       }
       else if(char.includes("\\")) {
          Terminal.clear();
          Terminal.contentOffset = -Terminal.index;
       }
       else if(char.includes("%")) {
-         clearInterval(typer);
+         clearInterval(Terminal.typer);
          $.get(Terminal.asciiArt,function(data){
             Terminal.insert(data);
             Terminal.contentOffset += data.length - 1;
-            startTyping();
+            Terminal.startTyping();
          });
       }
    },
@@ -292,7 +328,7 @@ var Terminal = {
    printResume:function() {
       $.get(Terminal.resume,function(resumeData){
          Terminal.text += resumeData;
-         startTyping();
+         Terminal.startTyping();
       });
    },
 
@@ -344,6 +380,7 @@ var Sprite = {
    step:0,
    stepSize:8,
    sprite:document.getElementById("sprite"),
+   walker:null,
 
    directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
    keycode:Object.freeze({LEFT: 37, UP: 38, RIGHT: 39, DOWN:40}),
@@ -351,9 +388,9 @@ var Sprite = {
    init:function() {
       // keyboard listener for sprite control
       document.addEventListener("keydown", function(event) {
-         if(event.which >= 37 && event.which <= 40) {
+         if(event.which >= Sprite.keycode.LEFT && event.which <= Sprite.keycode.DOWN) {
             event.preventDefault(); // prevent arrow keys from scrolling
-            stopWalking(); // ends the intro stationary animation
+            Sprite.stopWalking(); // ends the intro stationary animation
             Sprite.moveSprite(event.which);
          }
       });
@@ -386,6 +423,20 @@ var Sprite = {
       sprite.style.top = Sprite.posY;
       sprite.src = "img/me/" + Sprite.directionText[direction] + Sprite.step + ".png";
    },
+
+   startWalking:function() {
+      Sprite.walker = setInterval("Sprite.walk();", 100);
+   },
+
+   walk:function() {
+      Sprite.step = (Sprite.step + 1) % 9;
+      var sprite = document.getElementById("sprite");
+      sprite.src = "img/me/down" + Sprite.step + ".png";
+   },
+
+   stopWalking:function() {
+      clearInterval(Sprite.walker);
+   }
 }
 
 Terminal.file="text/intro.txt";
@@ -395,39 +446,6 @@ Terminal.userName = "cristianlara"
 
 Terminal.init();
 Sprite.init();
+Terminal.startTyping();
+Sprite.startWalking();
 
-var typer = setInterval("type();", 1);
-var walker = setInterval("walk();", 100);
-
-function startTyping() {
-   typer = setInterval("type();", 1);
-}
-
-function stopTyping() {
-   clearInterval(typer);
-}
-
-function type() {
-   Terminal.addText();
-   if (Terminal.index > Terminal.text.length) {
-      stopTyping();
-   }
-}
-
-function walk() {
-   Sprite.step = (Sprite.step + 1) % 9;
-   var sprite = document.getElementById("sprite");
-   sprite.src = "img/me/down" + Sprite.step + ".png";
-}
-
-function stopWalking() {
-   clearInterval(walker);
-}
-
-function downloadResume() {
-   document.getElementById("two").click();
-}
-
-function emailMe() {
-   document.getElementById("three").click();
-}
