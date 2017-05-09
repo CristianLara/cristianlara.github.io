@@ -154,50 +154,7 @@ var Terminal = {
                // Terminal.acceptingInput = true;
             }
       });
-
-      // keyboard listener for sprite control
-      document.addEventListener("keydown", function(event) {
-         if(event.which >= 37 && event.which <= 40) {
-            event.preventDefault(); // prevent arrow keys from scrolling
-            stopWalking(); // ends the intro stationary animation
-            Terminal.moveSprite(event.which);
-         }
-      });
    },
-
-   spriteX:775, spriteY:130, step:0, stepSize:8,
-   sprite:document.getElementById("sprite"),
-   direction:Object.freeze({left:37, up:38, right:39, down:40}),
-   directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
-
-   moveSprite:function(direction) {
-      Terminal.step = (Terminal.step + 1) % 9;
-
-      switch(direction) {
-         case Terminal.direction.right:
-            Terminal.spriteX += Terminal.stepSize;
-            break;
-
-         case Terminal.direction.left:
-            Terminal.spriteX -= Terminal.stepSize;
-            break;
-
-         case Terminal.direction.down:
-            Terminal.spriteY += Terminal.stepSize;
-            break;
-
-         case Terminal.direction.up:
-            Terminal.spriteY -= Terminal.stepSize;
-            break;
-
-      }
-
-      sprite.style.left = Terminal.spriteX;
-      sprite.style.top = Terminal.spriteY;
-      sprite.src = "img/me/" + Terminal.directionText[direction] + Terminal.step + ".png";
-   },
-
-
 
    clearInput:function() {
       Terminal.offset -= Terminal.input.length;
@@ -380,12 +337,64 @@ var Terminal = {
    }
 }
 
+var Sprite = {
+
+   posX:770,
+   posY:130,
+   step:0,
+   stepSize:8,
+   sprite:document.getElementById("sprite"),
+
+   directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
+   keycode:Object.freeze({LEFT: 37, UP: 38, RIGHT: 39, DOWN:40}),
+
+   init:function() {
+      // keyboard listener for sprite control
+      document.addEventListener("keydown", function(event) {
+         if(event.which >= 37 && event.which <= 40) {
+            event.preventDefault(); // prevent arrow keys from scrolling
+            stopWalking(); // ends the intro stationary animation
+            Sprite.moveSprite(event.which);
+         }
+      });
+   },
+
+   moveSprite:function(direction) {
+      Sprite.step = (Sprite.step + 1) % 9;
+
+      switch(direction) {
+         case Sprite.keycode.RIGHT:
+            Sprite.posX += Sprite.stepSize;
+            break;
+
+         case Sprite.keycode.LEFT:
+            Sprite.posX -= Sprite.stepSize;
+            break;
+
+         case Sprite.keycode.DOWN:
+            Sprite.posY += Sprite.stepSize;
+            break;
+
+         case Sprite.keycode.UP:
+            Sprite.posY -= Sprite.stepSize;
+            break;
+
+         default: break;
+      }
+
+      sprite.style.left = Sprite.posX;
+      sprite.style.top = Sprite.posY;
+      sprite.src = "img/me/" + Sprite.directionText[direction] + Sprite.step + ".png";
+   },
+}
+
 Terminal.file="text/intro.txt";
 Terminal.resume="text/resume.txt";
 Terminal.asciiArt="text/asciiArt.txt";
 Terminal.userName = "cristianlara"
 
 Terminal.init();
+Sprite.init();
 
 var typer = setInterval("type();", 1);
 var walker = setInterval("walk();", 100);
@@ -406,9 +415,9 @@ function type() {
 }
 
 function walk() {
-   Terminal.step = (Terminal.step + 1) % 9;
+   Sprite.step = (Sprite.step + 1) % 9;
    var sprite = document.getElementById("sprite");
-   sprite.src = "img/me/down" + Terminal.step + ".png";
+   sprite.src = "img/me/down" + Sprite.step + ".png";
 }
 
 function stopWalking() {
