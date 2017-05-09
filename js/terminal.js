@@ -1,3 +1,4 @@
+
 var Terminal = {
 
    userName:"",
@@ -166,8 +167,8 @@ var Terminal = {
 
    spriteX:775, spriteY:130, step:0, stepSize:8,
    sprite:document.getElementById("sprite"),
-   direction:{left:37, up:38, right:39, down:40},
-   directionText:{37:"left", 38:"up", 39:"right", 40:"down"},
+   direction:Object.freeze({left:37, up:38, right:39, down:40}),
+   directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
 
    moveSprite:function(direction) {
       Terminal.step = (Terminal.step + 1) % 9;
