@@ -69,7 +69,7 @@ var Terminal = {
    /**
    * insert(str)
    * inserts strings into the current place of the cursor
-   * this is primarily for inserting text between html tags
+   * this is primarily used for inserting text between html tags
    */
    insert:function(str) {
       Terminal.removeCursor();
@@ -93,7 +93,8 @@ var Terminal = {
 
    /**
    * addInputListener()
-   * adds a keyboard listener to allow input to the terminal
+   * adds keyboard listener to allow input to the terminal
+   * also adds listener to allow for control of the sprite
    */
    addInputListener:function() {
       // keyboard listener for terminal input
@@ -146,7 +147,7 @@ var Terminal = {
             }
             // skip animation
             else {
-               //TODO
+               // TODO
                // clearInterval(typer);
                // $("#console").html(Terminal.text);
                // Terminal.acceptingInput = true;
@@ -155,49 +156,44 @@ var Terminal = {
 
       // keyboard listener for sprite control
       document.addEventListener("keydown", function(event) {
-         // event.preventDefault();
-         stopWalking();
-         console.log(event.which);
-         if (event.which == 39) {
-            Terminal.moveSprite("right");
-         } else if (event.which == 37) {
-            Terminal.moveSprite("left");
-         } else if (event.which == 40) {
-            Terminal.moveSprite("down");
-         } else if (event.which == 38) {
-            Terminal.moveSprite("up");
+         if(event.which >= 37 && event.which <= 40) {
+            event.preventDefault(); // prevent arrow keys from scrolling
+            stopWalking(); // ends the intro stationary animation
+            Terminal.moveSprite(event.which);
          }
       });
    },
 
    spriteX:775, spriteY:130, step:0, stepSize:8,
+   sprite:document.getElementById("sprite"),
+   direction:{left:37, up:38, right:39, down:40},
+   directionText:{37:"left", 38:"up", 39:"right", 40:"down"},
 
    moveSprite:function(direction) {
       Terminal.step = (Terminal.step + 1) % 9;
 
       switch(direction) {
-         case "right":
+         case Terminal.direction.right:
             Terminal.spriteX += Terminal.stepSize;
             break;
 
-         case "left":
+         case Terminal.direction.left:
             Terminal.spriteX -= Terminal.stepSize;
             break;
 
-         case "down":
+         case Terminal.direction.down:
             Terminal.spriteY += Terminal.stepSize;
             break;
 
-         case "up":
+         case Terminal.direction.up:
             Terminal.spriteY -= Terminal.stepSize;
             break;
 
       }
 
-      var sprite = document.getElementById("sprite");
       sprite.style.left = Terminal.spriteX;
       sprite.style.top = Terminal.spriteY;
-      sprite.src = "img/me/" + direction + Terminal.step + ".png";
+      sprite.src = "img/me/" + Terminal.directionText[direction] + Terminal.step + ".png";
    },
 
 
@@ -328,9 +324,7 @@ var Terminal = {
       } 
       // it's just a normal character to insert
       else {
-         // console.log(Terminal.pending);
          Terminal.insert(Terminal.pending);
-         // console.log(Terminal.content());
       }
 
       window.scrollBy(0,50); // scroll to make sure bottom is always visible
@@ -392,9 +386,8 @@ Terminal.userName = "cristianlara"
 
 Terminal.init();
 
-var typer = null;
+var typer = setInterval("type();", 1);
 var walker = setInterval("walk();", 100);
-startTyping();
 
 function startTyping() {
    typer = setInterval("type();", 1);
