@@ -148,6 +148,9 @@ var Terminal = {
                      Terminal.showMessage(3);
                      Terminal.emailMe();
                   }
+                  else if (Terminal.input == "pokemon") {
+                     Charizard.init();
+                  }
                   else {
                      Terminal.showMessage(-1);
                   }
@@ -247,21 +250,13 @@ var Terminal = {
          Terminal.acceptingInput = false;
       }
       else if(char.includes("`")) {
-         Terminal.contentOffset -= 1;
+         Terminal.contentOffset -= "`".length;
          Terminal.stopTyping();
          setTimeout(Terminal.startTyping, Terminal.pauseDuration);
       }
       else if(char.includes("\\")) {
          Terminal.clear();
          Terminal.contentOffset = -Terminal.index;
-      }
-      else if(char.includes("%")) {
-         clearInterval(Terminal.typer);
-         $.get(Terminal.asciiArt,function(data){
-            Terminal.insert(data);
-            Terminal.contentOffset += data.length - 1;
-            Terminal.startTyping();
-         });
       }
    },
 
@@ -399,9 +394,7 @@ var Sprite = {
       });
       $(window).on('load', function() {
          Sprite.sprite = document.getElementById("sprite");
-         console.log(Sprite.sprite.getBoundingClientRect().left);
-         // Sprite.posX = Sprite.sprite.getBoundingClientRect.left;
-         // Sprite.posY = Sprite.sprite.getBoundingClientRect.top;
+         // Charizard.init();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
    },
@@ -468,7 +461,6 @@ var Sprite = {
 
 Terminal.file="text/intro.txt";
 Terminal.resume="text/resume.txt";
-Terminal.asciiArt="text/asciiArt.txt";
 Terminal.userName = "cristianlara"
 
 Terminal.init();
