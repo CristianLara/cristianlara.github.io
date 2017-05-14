@@ -39,15 +39,15 @@ body {
    left: 500px;
    height: 52px;
    width: 30px;
-   z-index: 1;
+   z-index: 2;
 }
 
 #charizard {
    position: relative;
    top: -64px;
    left: 600px;
-   height: 26px;
-   width: 29px;
+   height: 52px;
+   width: 58px;
    z-index: 1;
 }
 

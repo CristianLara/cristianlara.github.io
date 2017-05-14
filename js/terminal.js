@@ -23,10 +23,10 @@ var Terminal = {
    specialCharacters:["\n", "\\", "`", "$", "^"],
 
    /**
-   * init()
-   * Starts cursor blinking, reads textfile and stores in Terminal.text
-   * Adds click events to action links
-   */
+    * init()
+    * Starts cursor blinking, reads textfile and stores in Terminal.text
+    * Adds click events to action links
+    */
    init:function() {
       setInterval(function(){Terminal.blink();},500); // start cursor blink
 
@@ -50,17 +50,17 @@ var Terminal = {
    },
 
    /**
-   * startTyping()
-   * begins the Terminal's process of automatically typing text
-   */
+    * startTyping()
+    * begins the Terminal's process of automatically typing text
+    */
    startTyping:function() {
       Terminal.typer = setInterval(function() {Terminal.type();}, 1);
    },
 
    /**
-   * type()
-   * TODO
-   */
+    * type()
+    * TODO
+    */
    type:function() {
       Terminal.addText();
       if (Terminal.index > Terminal.text.length) {
@@ -69,25 +69,25 @@ var Terminal = {
    },
 
    /**
-   * stopTyping()
-   * TODO
-   */
+    * stopTyping()
+    * TODO
+    */
    stopTyping:function() {
       clearInterval(Terminal.typer);
    },
 
    /**
-   * content()
-   * returns the content in the terminal
-   */
+    * content()
+    * returns the content in the terminal
+    */
    content:function() {
       return $("#console").html();
    },
 
    /**
-   * write(str)
-   * appends str to the end of the terminal
-   */
+    * write(str)
+    * appends str to the end of the terminal
+    */
    write:function(str) {
       Terminal.removeCursor();
       $("#console").append(str);
@@ -95,10 +95,10 @@ var Terminal = {
    },
 
    /**
-   * insert(str)
-   * inserts strings into the current place of the cursor
-   * this is primarily used for inserting text between html tags
-   */
+    * insert(str)
+    * inserts strings into the current place of the cursor
+    * this is primarily used for inserting text between html tags
+    */
    insert:function(str) {
       Terminal.removeCursor();
       var content = Terminal.content();
@@ -111,28 +111,28 @@ var Terminal = {
    },
 
    /**
-   * clear()
-   * clears the terminal of all text and html
-   */
+    * clear()
+    * clears the terminal of all text and html
+    */
    clear:function() {
       $("#console").html("");
    },
 
 
    /**
-   * addInputListener()
-   * adds keyboard listener to allow input to the terminal
-   * also adds listener to allow for control of the sprite
-   */
+    * addInputListener()
+    * adds keyboard listener to allow input to the terminal
+    * also adds listener to allow for control of the sprite
+    */
    addInputListener:function() {
       // keyboard listener for terminal input
       document.addEventListener("keypress", function(event) {
-            event.preventDefault();
             if(Terminal.acceptingInput) {
                character = String.fromCharCode(event.which);
 
                // User hit enter
                if (event.which == Terminal.keycode.ENTER) {
+                  event.preventDefault();
                   Terminal.acceptingInput = false;
                   console.log("Your input was: " + Terminal.input);
                   Terminal.contentOffset--;
@@ -149,6 +149,7 @@ var Terminal = {
                      Terminal.emailMe();
                   }
                   else if (Terminal.input == "pokemon") {
+                     Terminal.showMessage(4);
                      Charizard.init();
                   }
                   else {
@@ -158,6 +159,7 @@ var Terminal = {
 
                // User hit backspace
                else if (event.which == Terminal.keycode.BACKSPACE) {
+                  event.preventDefault();
                   if(Terminal.input.length > 0) {
                      Terminal.removeCursor();
                      Terminal.removeLastCharacter();
@@ -192,25 +194,31 @@ var Terminal = {
    },
 
    showMessage:function(code) {
+      Terminal.text += " \n";
       switch(code) {
          // download resume
          case 2:
-            Terminal.text += " \ndownloading resume...\n\n$";
+            Terminal.text += "downloading resume...";
             break;
 
          // Contact me
          case 3:
-            Terminal.text += " \ncontacting me at cristianlara@stanford.edu...\n\n$";
+            Terminal.text += "contacting me at cristianlara@stanford.edu...";
+            break;
+
+         case 4:
+            Terminal.text += "initiating pokemon..."
             break;
 
          // Error code
          case (-1):
-            Terminal.text += " \n<span class=\"error\">enter number between 1 and 3...</span>\n\n$";
+            Terminal.text += "<span class=\"error\">enter number between 1 and 3...</span>";
             break;
 
          default:
             break;
       }
+      Terminal.text += "\n\n$"
       Terminal.startTyping();
       Terminal.clearInput();
    },
@@ -224,14 +232,14 @@ var Terminal = {
    },
 
    /**
-   * handleSpecialCharacter(char)
-   * handle special characters with the following actions
-   *
-   * \n : insert <br> tag
-   * $  : insert terminal prompt
-   * `  : pause before typing more
-   * \  : clear terminal
-   */
+    * handleSpecialCharacter(char)
+    * handle special characters with the following actions
+    *
+    * \n : insert <br> tag
+    * $  : insert terminal prompt
+    * `  : pause before typing more
+    * \  : clear terminal
+    */
    handleSpecialCharacter:function(char) {
       if(char.includes("\n")) {
          Terminal.insert("<br>");
@@ -261,10 +269,10 @@ var Terminal = {
    },
 
    /**
-   * handleHtml()
-   * Adds encountered html tags to the content, then offsets index to add
-   * next characters between the tags until the end tag is reached.
-   */
+    * handleHtml()
+    * Adds encountered html tags to the content, then offsets index to add
+    * next characters between the tags until the end tag is reached.
+    */
    handleHtml:function() {
       if(Terminal.insertingHtml) {
          Terminal.insertingHtml = false;
@@ -290,10 +298,10 @@ var Terminal = {
    },
 
    /**
-   * addText()
-   * Goes through the text file typing it out into the Terminal.
-   * Recognizes html and adds the tags before typing out the inner content.
-   */
+    * addText()
+    * Goes through the text file typing it out into the Terminal.
+    * Recognizes html and adds the tags before typing out the inner content.
+    */
    addText:function() {
       if(!Terminal.text) return;
       Terminal.removeCursor();
@@ -326,27 +334,27 @@ var Terminal = {
    },
 
    /**
-   * removeLastCharacter()
-   * removes the last character in the Terminal's content
-   */
+    * removeLastCharacter()
+    * removes the last character in the Terminal's content
+    */
    removeLastCharacter:function() {
         var content = Terminal.content();
         $("#console").html(content.substring(0, content.length - 1));
    },
 
    /**
-   * cursorIsOn()
-   * returns true if the cursor is being displayed, false otehrwise
-   */
+    * cursorIsOn()
+    * returns true if the cursor is being displayed, false otehrwise
+    */
    cursorIsOn:function() {
       var content = Terminal.content();
       return content.substring(content.length - 1, content.length) == "|";
    },
 
    /**
-   * removeCursor()
-   * removes the cursor if it is currently being displayed
-   */
+    * removeCursor()
+    * removes the cursor if it is currently being displayed
+    */
    removeCursor:function(){
       var content = Terminal.content();
       if(Terminal.cursorIsOn())
@@ -354,9 +362,9 @@ var Terminal = {
    },
 
    /**
-   * blink()
-   * blink the cursor by removing and reading it
-   */
+    * blink()
+    * blink the cursor by removing and reading it
+    */
    blink:function(){
       var content = Terminal.content();
       if(Terminal.cursorIsOn())
@@ -400,9 +408,9 @@ var Sprite = {
    },
 
    /**
-   * takeStep()
-   * change direction and location of sprite
-   */
+    * takeStep()
+    * change direction and location of sprite
+    */
    takeStep:function() {
       Sprite.step = (Sprite.step + 1) % Sprite.stepsInCycle;
 
@@ -430,30 +438,30 @@ var Sprite = {
       document.getElementById("sprite").style.top = Sprite.posY + 'px';
       Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
       
-      if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 40);
+      if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 60);
    },
 
    /**
-   * startWalking()
-   * begin cycling timer for walking animation
-   */
+    * startWalking()
+    * begin cycling timer for walking animation
+    */
    startWalking:function() {
       Sprite.walker = setInterval("Sprite.walk();", 100);
    },
 
    /**
-   * walk()
-   * auto walking animation cycling through the sprite in the current direction
-   */
+    * walk()
+    * auto walking animation cycling through the sprite in the current direction
+    */
    walk:function() {
       Sprite.step = (Sprite.step + 1) % Sprite.stepsInCycle;
       Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
    },
 
    /**
-   * stopWalking()
-   * pause the walking animation timer
-   */
+    * stopWalking()
+    * pause the walking animation timer
+    */
    stopWalking:function() {
       clearInterval(Sprite.walker);
    }
