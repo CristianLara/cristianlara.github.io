@@ -13,7 +13,7 @@ var Terminal = {
    htmlIndicator:"<",    // character indicating that we have encountered html
    acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
-   typer:null,           // timer for the typing animation
+   shownEmail:false,     // if I've shown my address, compose an email
 
    // keycode constants
    keycode:Object.freeze({ENTER: 13, BACKSPACE: 8}),
@@ -90,7 +90,8 @@ var Terminal = {
     */
    write:function(str) {
       Terminal.removeCursor();
-      $("#console").append(str);
+      // $("#console").append(str);
+      $("#cursor").before(str);
       return false;
    },
 
@@ -146,7 +147,11 @@ var Terminal = {
                   }
                   else if (Terminal.input == "3") {
                      Terminal.showMessage(3);
-                     Terminal.emailMe();
+                     if(Terminal.shownEmail) {
+                        Terminal.emailMe();
+                     } else {
+                        Terminal.shownEmail = true;
+                     }
                   }
                   else if (Terminal.input == "pokemon") {
                      Terminal.showMessage(4);
@@ -203,11 +208,16 @@ var Terminal = {
 
          // Contact me
          case 3:
-            Terminal.text += "contacting me at cristianlara@stanford.edu...";
+            if(Terminal.shownEmail) {
+               Terminal.text += "attempting to launch your email client...";
+            } else {
+               Terminal.text += "you can contact me at cristianlara@stanford.edu\n"
+                              + "<span class=\"c\">tip</span>: enter 3 again to auto compose an email to me via your default email client";
+            }
             break;
 
          case 4:
-            Terminal.text += "initiating pokemon..."
+            Terminal.text += "initiating pokemon...";
             break;
 
          // Error code
@@ -347,8 +357,8 @@ var Terminal = {
     * returns true if the cursor is being displayed, false otehrwise
     */
    cursorIsOn:function() {
-      var content = Terminal.content();
-      return content.substring(content.length - 1, content.length) == "|";
+      var content = $("#cursor").html();
+      return content == "|";
    },
 
    /**
@@ -356,9 +366,8 @@ var Terminal = {
     * removes the cursor if it is currently being displayed
     */
    removeCursor:function(){
-      var content = Terminal.content();
       if(Terminal.cursorIsOn())
-         Terminal.removeLastCharacter();
+         $("#cursor").html("");
    },
 
    /**
@@ -368,9 +377,9 @@ var Terminal = {
    blink:function(){
       var content = Terminal.content();
       if(Terminal.cursorIsOn())
-         Terminal.removeLastCharacter();
+         $("#cursor").html("");
       else
-         Terminal.write("|");
+         $("#cursor").html("|");
    }
 }
 

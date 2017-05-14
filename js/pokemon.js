@@ -29,42 +29,8 @@ var Charizard = {
 	 * change direction and location of sprite
 	 */
 	takeStep:function() {
-	  // Charizard.step = (Charizard.step + 1) % 4;
 	  Charizard.direction = Charizard.rand(37,40);
 	  Charizard.walking = true;
-
-	  // switch(Charizard.direction) {
-	  //    case Charizard.keycode.RIGHT:
-	  //       Charizard.posX += Charizard.stepSize;
-	  //       break;
-
-	  //    case Charizard.keycode.LEFT:
-	  //       Charizard.posX -= Charizard.stepSize;
-	  //       break;
-
-	  //    case Charizard.keycode.DOWN:
-	  //       Charizard.posY += Charizard.stepSize;
-	  //       break;
-
-	  //    case Charizard.keycode.UP:
-	  //       Charizard.posY -= Charizard.stepSize;
-	  //       break;
-
-	  //    default: break;
-	  // }
-
-	  // document.getElementById("charizard").style.left = Charizard.posX + 'px';
-	  // document.getElementById("charizard").style.top = Charizard.posY + 'px';
-	  // Charizard.sprite.src = "img/pokemon/charizard/" + Charizard.directionText[Charizard.direction] + Charizard.step % 2 + ".png";	  
-
-	  // if(Charizard.step != 0) {
-	  // 	setTimeout(function() { Charizard.takeStep(); }, 100);
-	  // } else {
-	  // 	Charizard.direction = Charizard.rand(37,40);
-	  // 	setTimeout(function() { Charizard.takeStep(); }, 1500);
-	  // 	// setTimeout(function() { Charizard.takeStep(); }, Charizard.rand(500, 2000))
-	  // }
-	  // setTimeout(function() { Charizard.takeStep(); }, 1500/*Charizard.rand(500, 2000)*/);
 	},
 
 	/**
