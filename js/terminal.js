@@ -3,7 +3,6 @@ var Terminal = {
 
    userName:"",
    text:"",              // to contain the content of the text file
-   asciiArt:"",          // name of text file with ascii art (my name)
    index:0,              // current cursor position in the text to add
    speed:1,              // number of letters to add at a time
    file:"",              // name of text file to get text from
@@ -21,7 +20,7 @@ var Terminal = {
 
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
-   specialCharacters:["\n", "\\", "`", "$", "%", "^"],
+   specialCharacters:["\n", "\\", "`", "$", "^"],
 
    /**
    * init()
@@ -55,7 +54,7 @@ var Terminal = {
    * begins the Terminal's process of automatically typing text
    */
    startTyping:function() {
-      Terminal.typer = setInterval("Terminal.type();", 1);
+      Terminal.typer = setInterval(function() {Terminal.type();}, 1);
    },
 
    /**
@@ -229,7 +228,6 @@ var Terminal = {
    * $  : insert terminal prompt
    * `  : pause before typing more
    * \  : clear terminal
-   * %  : insert ascii art
    */
    handleSpecialCharacter:function(char) {
       if(char.includes("\n")) {
@@ -375,13 +373,18 @@ var Terminal = {
 
 var Sprite = {
 
-   posX:770,
-   posY:130,
-   step:0,
-   stepSize:8,
+   // reference to DOM sprite element
    sprite:document.getElementById("sprite"),
-   walker:null,
 
+   posX:500,       // X position in pixels
+   posY:-64,       // Y position in pixels
+   step:0,         // current step number in cycle
+   stepSize:4,     // distance in pixels of each step
+   stepsInCycle:9, // number of steps before resetting
+   walker:null,    // timer for the walking animation
+   direction:null, // direction sprite is facing
+
+   // keycode constants
    directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
    keycode:Object.freeze({LEFT: 37, UP: 38, RIGHT: 39, DOWN:40}),
 
@@ -390,16 +393,27 @@ var Sprite = {
       document.addEventListener("keydown", function(event) {
          if(event.which >= Sprite.keycode.LEFT && event.which <= Sprite.keycode.DOWN) {
             event.preventDefault(); // prevent arrow keys from scrolling
-            Sprite.stopWalking(); // ends the intro stationary animation
-            Sprite.moveSprite(event.which);
+            Sprite.direction = event.which;
+            Sprite.takeStep();
          }
       });
+      $(window).on('load', function() {
+         Sprite.sprite = document.getElementById("sprite");
+         console.log(Sprite.sprite.getBoundingClientRect().left);
+         // Sprite.posX = Sprite.sprite.getBoundingClientRect.left;
+         // Sprite.posY = Sprite.sprite.getBoundingClientRect.top;
+      });
+      Sprite.direction = Sprite.keycode.RIGHT;
    },
 
-   moveSprite:function(direction) {
-      Sprite.step = (Sprite.step + 1) % 9;
+   /**
+   * takeStep()
+   * change direction and location of sprite
+   */
+   takeStep:function() {
+      Sprite.step = (Sprite.step + 1) % Sprite.stepsInCycle;
 
-      switch(direction) {
+      switch(Sprite.direction) {
          case Sprite.keycode.RIGHT:
             Sprite.posX += Sprite.stepSize;
             break;
@@ -419,21 +433,34 @@ var Sprite = {
          default: break;
       }
 
-      sprite.style.left = Sprite.posX;
-      sprite.style.top = Sprite.posY;
-      sprite.src = "img/me/" + Sprite.directionText[direction] + Sprite.step + ".png";
+      document.getElementById("sprite").style.left = Sprite.posX + 'px';
+      document.getElementById("sprite").style.top = Sprite.posY + 'px';
+      Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
+      
+      if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 40);
    },
 
+   /**
+   * startWalking()
+   * begin cycling timer for walking animation
+   */
    startWalking:function() {
       Sprite.walker = setInterval("Sprite.walk();", 100);
    },
 
+   /**
+   * walk()
+   * auto walking animation cycling through the sprite in the current direction
+   */
    walk:function() {
-      Sprite.step = (Sprite.step + 1) % 9;
-      var sprite = document.getElementById("sprite");
-      sprite.src = "img/me/down" + Sprite.step + ".png";
+      Sprite.step = (Sprite.step + 1) % Sprite.stepsInCycle;
+      Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
    },
 
+   /**
+   * stopWalking()
+   * pause the walking animation timer
+   */
    stopWalking:function() {
       clearInterval(Sprite.walker);
    }
@@ -447,5 +474,4 @@ Terminal.userName = "cristianlara"
 Terminal.init();
 Sprite.init();
 Terminal.startTyping();
-Sprite.startWalking();
 

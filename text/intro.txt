@@ -1,4 +1,3 @@
-<pre class="title">%</pre>
 ``$^` ./welcome```
 
 I'm an undergraduate at Stanford University, class of '18. I have a passion for tinkering, designing, and programming. One of my biggest interests is the intersection of design and mobile. If I don't have homework for whatever reason, you'll likely find me tinkering with the theme on my jailbroken phone, shooting arrows with my bow, or playing ping pong.`
