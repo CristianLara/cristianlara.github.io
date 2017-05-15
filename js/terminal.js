@@ -11,7 +11,7 @@ var Terminal = {
    contentOffset:0,      // the offset in the content compared to the textfile
    pauseDuration:500,    // duration of pause action in milliseconds
    htmlIndicator:"<",    // character indicating that we have encountered html
-   acceptingInput:false, // indicating if accepting user input
+   // acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
    shownEmail:false,     // if I've shown my address, compose an email
 
@@ -46,7 +46,7 @@ var Terminal = {
             Terminal.acceptingInput = false;
             Terminal.printResume();
          });
-         createPokemon();
+         // createPokemon();
       });
    },
 
