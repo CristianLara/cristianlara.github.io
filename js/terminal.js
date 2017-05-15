@@ -20,7 +20,7 @@ var Terminal = {
 
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
-   specialCharacters:["\n", "\\", "`", "$", "^"],
+   specialCharacters:["\n", "\\", "`", "$"],
 
    /**
     * init()
@@ -267,10 +267,6 @@ var Terminal = {
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
          Terminal.acceptingInput = true;
-      }
-      else if(char.includes("^")) {
-         Terminal.contentOffset -= "^".length;
-         Terminal.acceptingInput = false;
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= "`".length;

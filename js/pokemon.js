@@ -1,12 +1,19 @@
 
 var pokemonNames = ["charizard"];
+var createdPokemon = [];
 
 var rand = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 var createPokemon = function() {
-	new Pokemon(pokemonNames[rand(0, pokemonNames.length-1)]);
+	if(pokemonNames.length) {
+		createdPokemon.push(
+			new Pokemon(
+				pokemonNames.splice(rand(0, pokemonNames.length-1), 1)[0]
+			)
+		);
+	}
 };
 
 function Pokemon(name) {
