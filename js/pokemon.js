@@ -150,6 +150,11 @@ Pokemon.prototype.takeStep = function() {
  * current direction
  */
 Pokemon.prototype.animate = function() {
+	this.animStep = (this.animStep + 1) % 2;
+	this.sprite.src = "img/pokemon/" + this.name + "/"
+					   +  this.directionText[this.direction]
+					   +  this.animStep % 2 + ".png";
+
 	if(this.walking) {
 		this.step = (this.step + 1) % 2;
 		switch(this.direction) {
@@ -180,11 +185,6 @@ Pokemon.prototype.animate = function() {
 	  	setTimeout(function(ref) { ref.takeStep(); }, rand(1000,3000), this);
 	  }
 	}
-
-	this.animStep = (this.animStep + 1) % 2;
-	this.sprite.src = "img/pokemon/" + this.name + "/"
-					   +  this.directionText[this.direction]
-					   +  this.animStep % 2 + ".png";
 };
 
 /**
