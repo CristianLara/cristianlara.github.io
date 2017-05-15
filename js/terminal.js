@@ -81,7 +81,7 @@ var Terminal = {
     * returns the content in the terminal
     */
    content:function() {
-      return $("#console").html();
+      return $("#text").html();
    },
 
    /**
@@ -91,7 +91,7 @@ var Terminal = {
    write:function(str) {
       Terminal.removeCursor();
       // $("#console").append(str);
-      $("#cursor").before(str);
+      $("#text").append(str);
       return false;
    },
 
@@ -108,7 +108,7 @@ var Terminal = {
       var contentAfter = 
          content.substring(Terminal.index + Terminal.contentOffset - 1);
 
-      $("#console").html(contentBefore + str + contentAfter);
+      $("#text").html(contentBefore + str + contentAfter);
    },
 
    /**
@@ -116,7 +116,7 @@ var Terminal = {
     * clears the terminal of all text and html
     */
    clear:function() {
-      $("#console").html("");
+      $("#text").html("");
    },
 
 
@@ -349,7 +349,7 @@ var Terminal = {
     */
    removeLastCharacter:function() {
         var content = Terminal.content();
-        $("#console").html(content.substring(0, content.length - 1));
+        $("#text").html(content.substring(0, content.length - 1));
    },
 
    /**
