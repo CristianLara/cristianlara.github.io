@@ -80,7 +80,7 @@ Pokemon.prototype.animateIn = function() {
     this.posY = rand(top, top + height -
     	this.sprite.getBoundingClientRect().height);
 
-    if(/*rand(0,1)*/1) {
+    if(rand(0,1)) {
     	// animate from right
     	this.posX = width;
     	this.direction = this.keycode.LEFT;
@@ -106,7 +106,7 @@ Pokemon.prototype.walkIn = function(target) {
 							   +  this.directionText[this.direction]
 							   +  this.animStep % 2 + ".png";
 			this.posX -= this.stepSize;
-			this.sprite.style.left =this.posX + 'px';
+			this.sprite.style.left = this.posX + 'px';
 
 			setTimeout(function(target, ref) {
 				ref.walkIn(target); 
@@ -116,10 +116,21 @@ Pokemon.prototype.walkIn = function(target) {
 			this.startAnimating();
 		}
 	} else {
-		if(this.posX > target) {
-			this.startAnimating();
-		} {
+		if(this.posX < target) {
+			// haven't reached the target yet
+			this.animStep = (this.animStep + 1) % 2;
+			this.sprite.src = "img/pokemon/" + this.name + "/"
+							   +  this.directionText[this.direction]
+							   +  this.animStep % 2 + ".png";
+			this.posX += this.stepSize;
+			this.sprite.style.left = this.posX + 'px';
 
+			setTimeout(function(target, ref) {
+				ref.walkIn(target); 
+			}, 60, target, this);
+		} else {
+			// reached target, stop walking in
+			this.startAnimating();
 		}
 	}
 }

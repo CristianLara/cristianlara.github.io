@@ -46,7 +46,7 @@ var Terminal = {
             Terminal.acceptingInput = false;
             Terminal.printResume();
          });
-         // createPokemon();
+         createPokemon();
       });
    },
 
@@ -390,7 +390,7 @@ var Sprite = {
    // reference to DOM sprite element
    sprite:document.getElementById("sprite"),
 
-   posX:500,       // X position in pixels
+   posX:465,       // X position in pixels
    posY:-64,       // Y position in pixels
    step:0,         // current step number in cycle
    stepSize:4,     // distance in pixels of each step
@@ -413,7 +413,6 @@ var Sprite = {
       });
       $(window).on('load', function() {
          Sprite.sprite = document.getElementById("sprite");
-         // Charizard.init();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
    },
