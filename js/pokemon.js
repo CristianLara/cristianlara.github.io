@@ -1,11 +1,24 @@
 
+// pokemon available for spawn
 var pokemonNames = ["charizard"];
+
+// spawned pokemon
 var createdPokemon = [];
 
+/**
+ * rand()
+ * returns a random integer between min (inclusive) and max (inclusive)
+ */
 var rand = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+/**
+ * createPokemon()
+ * instantiate a random pokemon from the list of
+ * pokemon names. Remove the name from the list to not
+ * have duplicates.
+ */
 var createPokemon = function() {
 	if(pokemonNames.length) {
 		createdPokemon.push(
@@ -16,6 +29,10 @@ var createPokemon = function() {
 	}
 };
 
+/**
+ * Pokemon
+ * class for each instantiated pokemon
+ */
 function Pokemon(name) {
 
 	this.sprite = null;    // reference to DOM sprite element
@@ -37,8 +54,8 @@ function Pokemon(name) {
 		LEFT: 37, UP: 38, RIGHT: 39, DOWN:40
 	});
 
-	// add element to DOM
-	$("#sprite").after(
+	// add pokemon to DOM
+	$("#title").before(
 		"<img id=\"" + name + "\" "
 		+    "class=\"" + name + "\" "
 		+    "src=\"img/pokemon/" + name + "/left0.png\">"
@@ -46,8 +63,65 @@ function Pokemon(name) {
 
 
 	this.sprite = $("#" + name)[0];
-	this.startAnimating();
+	this.animateIn();
 
+}
+
+/**
+ * animateIn()
+ * animate the pokemon into view from a random location
+ */
+Pokemon.prototype.animateIn = function() {
+	var top  = window.pageYOffset || document.documentElement.scrollTop;
+    var left = window.pageXOffset || document.documentElement.scrollLeft;
+    var height = $(window).height();
+    var width = window.innerWidth;
+
+    this.posY = rand(top, top + height -
+    	this.sprite.getBoundingClientRect().height);
+
+    if(/*rand(0,1)*/1) {
+    	// animate from right
+    	this.posX = width;
+    	this.direction = this.keycode.LEFT;
+    } else {
+    	// animate from left
+    	this.posX = 0 - this.sprite.getBoundingClientRect().width;
+    	this.direction = this.keycode.RIGHT;
+    }
+
+    this.sprite.style.left =this.posX +'px';
+	this.sprite.style.top = this.posY +'px';
+
+	var targetX = rand(0, width - this.sprite.style.width);
+	this.walkIn(targetX);
+}
+
+Pokemon.prototype.walkIn = function(target) {
+	if(this.direction == this.keycode.LEFT) {
+		if(this.posX > target) {
+			// haven't reached the target yet
+			this.animStep = (this.animStep + 1) % 2;
+			this.sprite.src = "img/pokemon/" + this.name + "/"
+							   +  this.directionText[this.direction]
+							   +  this.animStep % 2 + ".png";
+			this.posX -= this.stepSize;
+			this.sprite.style.left =this.posX + 'px';
+
+			setTimeout(function(target, ref) {
+				ref.walkIn(target); 
+			}, 60, target, this);
+		} else {
+			// reached target, stop walking in
+			this.startAnimating();
+		}
+	} else {
+		if(this.posX > target) {
+			this.startAnimating();
+		} {
+
+		}
+	}
 }
 
 /**
@@ -87,8 +161,8 @@ Pokemon.prototype.animate = function() {
 		    default: break;
 		}
 
-	  document.getElementById(this.name).style.left =this.posX +'px';
-	  document.getElementById(this.name).style.top = this.posY +'px';
+	  document.getElementById(this.name).style.left =this.posX + 'px';
+	  document.getElementById(this.name).style.top = this.posY + 'px';
 
 	  if(this.step == 0) {
 	  	this.walking = false;

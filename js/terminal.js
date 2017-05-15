@@ -60,7 +60,8 @@ var Terminal = {
 
    /**
     * type()
-    * TODO
+    * repeating function which keeps adding text as long as there
+    * is text left to type
     */
    type:function() {
       Terminal.addText();
@@ -71,7 +72,7 @@ var Terminal = {
 
    /**
     * stopTyping()
-    * TODO
+    * pause the Terminal's typing
     */
    stopTyping:function() {
       clearInterval(Terminal.typer);
