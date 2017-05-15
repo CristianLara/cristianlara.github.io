@@ -7,7 +7,7 @@ var Terminal = {
    speed:1,              // number of letters to add at a time
    file:"",              // name of text file to get text from
    pending:"",           // pending string of text to type
-   insertingHtml:false,  // indicates if we are inserting text between html tags
+   insertingHtml:false,  // indicates if we inserting text between html tags
    contentOffset:0,      // the offset in the content compared to the textfile
    pauseDuration:500,    // duration of pause action in milliseconds
    htmlIndicator:"<",    // character indicating that we have encountered html
@@ -46,6 +46,7 @@ var Terminal = {
             Terminal.acceptingInput = false;
             Terminal.printResume();
          });
+         // createPokemon();
       });
    },
 
@@ -155,7 +156,7 @@ var Terminal = {
                   }
                   else if (Terminal.input == "pokemon") {
                      Terminal.showMessage(4);
-                     Charizard.init();
+                     createPokemon();
                   }
                   else {
                      Terminal.showMessage(-1);
@@ -170,7 +171,7 @@ var Terminal = {
                      Terminal.removeLastCharacter();
                      Terminal.contentOffset--;
                      length = Terminal.input.length;
-                     Terminal.input = Terminal.input.substring(0, length - 1);                     
+                     Terminal.input = Terminal.input.substring(0, length - 1);
                   }
                }
 
@@ -211,8 +212,11 @@ var Terminal = {
             if(Terminal.shownEmail) {
                Terminal.text += "attempting to launch your email client...";
             } else {
-               Terminal.text += "you can contact me at cristianlara@stanford.edu\n"
-                              + "<span class=\"c\">tip</span>: enter 3 again to auto compose an email to me via your default email client";
+               Terminal.text += "you can contact me at "
+                             +  "cristianlara@stanford.edu\n"
+                             +  "<span class=\"c\">tip</span>: "
+                             +  "enter 3 again to auto compose an email to me "
+                             +  "via your default email client";
             }
             break;
 
@@ -222,7 +226,8 @@ var Terminal = {
 
          // Error code
          case (-1):
-            Terminal.text += "<span class=\"error\">enter number between 1 and 3...</span>";
+            Terminal.text += "<span class=\"error\">"
+                          +  "enter number between 1 and 3...</span>";
             break;
 
          default:
@@ -256,7 +261,7 @@ var Terminal = {
          Terminal.contentOffset += "<br>".length - "\n".length;
       }
       else if(char.includes("$")) {
-         var prompt = "<span class=\"a\">root@" +Terminal.userName +"</span>:"+ 
+         var prompt = "<span class=\"a\">root@" +Terminal.userName +"</span>:"+
                       "<span class=\"b\">~</span>" +
                       "<span class=\"c\">$</span> ";
          Terminal.insert(prompt);

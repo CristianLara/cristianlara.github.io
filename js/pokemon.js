@@ -1,101 +1,114 @@
 
-var Charizard = {
+var pokemonNames = ["charizard"];
 
-	// reference to DOM sprite element
-	sprite:null,
+var rand = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
-	posX:600,       // X position in pixels
-	posY:-64,       // Y position in pixels
-	step:0,         // current step number in cycle
-	stepSize:8,     // distance in pixels of each step
-	stepsInCycle:2, // number of steps before resetting
-	animStep:0,		// step in the animation
-	walking:false,    // timer for the walking animation
-	direction:null, // direction sprite is facing
+var createPokemon = function() {
+	new Pokemon(pokemonNames[rand(0, pokemonNames.length-1)]);
+};
+
+function Pokemon(name) {
+
+	this.sprite = null;    // reference to DOM sprite element
+	this.name = name;	   // name of this pokemon
+	this.posX = 600;       // X position in pixels
+	this.posY = -64;       // Y position in pixels
+	this.step = 0;         // current step number in cycle
+	this.stepSize = 8;     // distance in pixels of each step
+	this.stepsInCycle = 2; // number of steps before resetting
+	this.animStep = 0;	   // step in the animation
+	this.walking = false;  // timer for the walking animation
+	this.direction = null; // direction sprite is facing
 
 	// keycode constants
-	directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
-	keycode:Object.freeze({LEFT: 37, UP: 38, RIGHT: 39, DOWN:40}),
+	this.directionText = Object.freeze({
+		37:"left", 38:"up", 39:"right", 40:"down"
+	});
+	this.keycode = Object.freeze({
+		LEFT: 37, UP: 38, RIGHT: 39, DOWN:40
+	});
 
-	init:function() {
-		var elem = "<img id=\"charizard\" class=\"charizard\" src=\"img/pokemon/charizard/left0.png\">";
-		$("#sprite").after(elem);
-		Charizard.sprite = document.getElementById("charizard");
-		Charizard.startAnimating();
-	},
+	// add element to DOM
+	$("#sprite").after(
+		"<img id=\"" + name + "\" "
+		+    "class=\"" + name + "\" "
+		+    "src=\"img/pokemon/" + name + "/left0.png\">"
+	);
 
-	/**
-	 * takeStep()
-	 * change direction and location of sprite
-	 */
-	takeStep:function() {
-	  Charizard.direction = Charizard.rand(37,40);
-	  Charizard.walking = true;
-	},
 
-	/**
-	 * startAnimating()
-	 * begin cycling timer for walking animation
-	 */
-	startAnimating:function() {
-		Charizard.direction = Charizard.keycode.LEFT;
-		setInterval(function(){Charizard.animate();}, 300);
-	  	setTimeout(function() { Charizard.takeStep(); }, Charizard.rand(1000, 2000));
-	},
+	this.sprite = $("#" + name)[0];
+	this.startAnimating();
 
-	/**
-	 * animate()
-	 * auto walking animation cycling through the sprite in the current direction
-	 */
-	animate:function() {
-		if(Charizard.walking) {
-			Charizard.step = (Charizard.step + 1) % 2;
-			switch(Charizard.direction) {
-			    case Charizard.keycode.RIGHT:
-			        Charizard.posX += Charizard.stepSize;
-			        break;
+}
 
-			    case Charizard.keycode.LEFT:
-			        Charizard.posX -= Charizard.stepSize;
-			        break;
+/**
+ * takeStep()
+ * change direction and location of sprite
+ */
+Pokemon.prototype.takeStep = function() {
+	this.direction = rand(37,40);
+	this.walking = true;
+};
 
-			    case Charizard.keycode.DOWN:
-			        Charizard.posY += Charizard.stepSize;
-		        	break;
+/**
+ * animate()
+ * auto walking animation cycling through the sprite in the
+ * current direction
+ */
+Pokemon.prototype.animate = function() {
+	if(this.walking) {
+		this.step = (this.step + 1) % 2;
+		switch(this.direction) {
+		    case this.keycode.RIGHT:
+		        this.posX += this.stepSize;
+		        break;
 
-			    case Charizard.keycode.UP:
-			        Charizard.posY -= Charizard.stepSize;
-			        break;
+		    case this.keycode.LEFT:
+		        this.posX -= this.stepSize;
+		        break;
 
-			    default: break;
-			}
+		    case this.keycode.DOWN:
+		        this.posY += this.stepSize;
+	        	break;
 
-		  document.getElementById("charizard").style.left = Charizard.posX + 'px';
-		  document.getElementById("charizard").style.top = Charizard.posY + 'px';
+		    case this.keycode.UP:
+		        this.posY -= this.stepSize;
+		        break;
 
-		  if(Charizard.step == 0) {
-		  	Charizard.walking = false;
-		  	setTimeout(function() { Charizard.takeStep(); }, Charizard.rand(1000, 3000));
-		  }
+		    default: break;
 		}
 
-		Charizard.animStep = (Charizard.animStep + 1) % 2;
-		Charizard.sprite.src = "img/pokemon/charizard/" + Charizard.directionText[Charizard.direction] + Charizard.animStep % 2 + ".png";
-	},
+	  document.getElementById(this.name).style.left =this.posX +'px';
+	  document.getElementById(this.name).style.top = this.posY +'px';
 
-	/**
-	 * Returns a random integer between min (inclusive) and max (inclusive)
-	 * Using Math.round() will give you a non-uniform distribution!
-	 */
-	rand:function(min, max) {
-	    return Math.floor(Math.random() * (max - min + 1)) + min;
-	},
-
-	/**
-	 * stopWalking()
-	 * pause the walking animation timer
-	 */
-	stopWalking:function() {
-	  clearInterval(Charizard.walker);
+	  if(this.step == 0) {
+	  	this.walking = false;
+	  	setTimeout(function(ref) { ref.takeStep(); }, rand(1000,3000), this);
+	  }
 	}
-}
+
+	this.animStep = (this.animStep + 1) % 2;
+	this.sprite.src = "img/pokemon/" + this.name + "/"
+					   +  this.directionText[this.direction]
+					   +  this.animStep % 2 + ".png";
+};
+
+/**
+ * stopWalking()
+ * pause the walking animation timer
+ */
+Pokemon.prototype.stopWalking = function() {
+  clearInterval(this.walker);
+};
+
+/**
+ * startAnimating()
+ * begin cycling timer for walking animation
+ */
+Pokemon.prototype.startAnimating = function() {
+	this.direction = this.keycode.LEFT;
+	setInterval(function(ref) { ref.animate(); }, 300, this);
+  	setTimeout(function(ref) { ref.takeStep(); }, rand(1000,2000), this);
+};
