@@ -1,6 +1,6 @@
 
 // pokemon available for spawn
-var pokemonNames = ["charizard"];
+var pokemonNames = ["charizard", "bulbasaur", "squirtle"];
 
 // spawned pokemon
 var createdPokemon = [];
@@ -14,12 +14,28 @@ var rand = function(min, max) {
 };
 
 /**
- * createPokemon()
+ * createAllPokemon()
  * instantiate a random pokemon from the list of
  * pokemon names. Remove the name from the list to not
  * have duplicates.
  */
-var createPokemon = function() {
+var createAllPokemon = function() {
+	while(pokemonNames.length > 0) {
+		createdPokemon.push(
+			new Pokemon(
+				pokemonNames.splice(rand(0, pokemonNames.length-1), 1)[0]
+			)
+		);
+	}
+};
+
+/**
+ * createSinglePokemon()
+ * instantiate a random pokemon from the list of
+ * pokemon names. Remove the name from the list to not
+ * have duplicates.
+ */
+var createSinglePokemon = function() {
 	if(pokemonNames.length) {
 		createdPokemon.push(
 			new Pokemon(
