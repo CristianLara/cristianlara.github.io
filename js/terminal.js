@@ -40,8 +40,6 @@ var Terminal = {
       $(window).on('load', function() {
          $("#console").on('click', "#one", function() {
             Terminal.clearInput();
-            // Terminal.write("1");
-            // Terminal.input += "1";
             Terminal.write('\n');
             Terminal.acceptingInput = false;
             Terminal.printResume();
@@ -187,10 +185,10 @@ var Terminal = {
             }
             // skip animation
             else {
-               // TODO
-               // clearInterval(typer);
-               // $("#console").html(Terminal.text);
-               // Terminal.acceptingInput = true;
+               // Terminal.stopTyping();
+               // while(Terminal.index > Terminal.text.length) {
+               //    Terminal.addText();
+               // }
             }
       });
    },
@@ -267,7 +265,7 @@ var Terminal = {
                       "<span class=\"c\">$</span> ";
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
-         Terminal.acceptingInput = true;
+         if(Terminal.index > 3) Terminal.acceptingInput = true;
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= "`".length;
@@ -311,7 +309,7 @@ var Terminal = {
 
    /**
     * addText()
-    * Goes through the text file typing it out into the Terminal.
+    * Goes through the text file typing it out into the Terminal one letter at a time.
     * Recognizes html and adds the tags before typing out the inner content.
     */
    addText:function() {
