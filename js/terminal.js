@@ -17,7 +17,7 @@ var Terminal = {
    skip:false,
 
    // keycode constants
-   keycode:Object.freeze({ENTER: 13, BACKSPACE: 8}),
+   keycode:Object.freeze({ENTER: 13, BACKSPACE: 8, SPACE: 32}),
 
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear
@@ -193,7 +193,9 @@ var Terminal = {
             }
             // skip animation
             else {
-               Terminal.skip = true;
+               if(event.which == Terminal.keycode.SPACE) {
+                  Terminal.skip = true;
+               }
             }
       });
    },
