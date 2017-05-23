@@ -1,6 +1,7 @@
 
 // pokemon available for spawn
-var pokemonNames = ["charizard", "bulbasaur", "squirtle"];
+var pokemonNames = ["charizard", "bulbasaur", "squirtle",
+					"pidgeot", "pikachu", "butterfree"];
 
 // spawned pokemon
 var createdPokemon = [];
@@ -61,6 +62,7 @@ function Pokemon(name) {
 	this.animStep = 0;	   // step in the animation
 	this.walking = false;  // timer for the walking animation
 	this.direction = null; // direction sprite is facing
+	this.margin = 100;	   // margin around screen without spawn
 
 	// keycode constants
 	this.directionText = Object.freeze({
@@ -79,7 +81,7 @@ function Pokemon(name) {
 
 
 	this.sprite = $("#" + name)[0];
-	this.animateIn();
+	this.calculatePositions();
 
 }
 
@@ -87,29 +89,32 @@ function Pokemon(name) {
  * animateIn()
  * animate the pokemon into view from a random location
  */
-Pokemon.prototype.animateIn = function() {
+Pokemon.prototype.calculatePositions = function() {
 	var top  = window.pageYOffset || document.documentElement.scrollTop;
     var left = window.pageXOffset || document.documentElement.scrollLeft;
     var height = $(window).height();
     var width = window.innerWidth;
 
-    this.posY = rand(top, top + height -
-    	this.sprite.getBoundingClientRect().height);
+    this.posY = rand(top + this.margin, top + height -
+    	this.sprite.getBoundingClientRect().height - this.margin);
+    var targetX;
 
     if(rand(0,1)) {
     	// animate from right
     	this.posX = width;
     	this.direction = this.keycode.LEFT;
+    	targetX = rand(width / 2, width - this.sprite.style.width - this.margin);
     } else {
     	// animate from left
     	this.posX = 0 - this.sprite.getBoundingClientRect().width;
     	this.direction = this.keycode.RIGHT;
+    	targetX = rand(this.margin, (width / 2) - this.sprite.style.width - this.margin);
     }
 
     this.sprite.style.left =this.posX +'px';
 	this.sprite.style.top = this.posY +'px';
 
-	var targetX = rand(0, width - this.sprite.style.width);
+	// var targetX = rand(this.margin, width - this.sprite.style.width - this.margin);
 	this.walkIn(targetX);
 }
 
@@ -126,7 +131,7 @@ Pokemon.prototype.walkIn = function(target) {
 
 			setTimeout(function(target, ref) {
 				ref.walkIn(target); 
-			}, 60, target, this);
+			}, 100, target, this);
 		} else {
 			// reached target, stop walking in
 			this.startAnimating();
@@ -143,7 +148,7 @@ Pokemon.prototype.walkIn = function(target) {
 
 			setTimeout(function(target, ref) {
 				ref.walkIn(target); 
-			}, 60, target, this);
+			}, 100, target, this);
 		} else {
 			// reached target, stop walking in
 			this.startAnimating();
