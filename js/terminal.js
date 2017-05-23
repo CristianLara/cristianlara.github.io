@@ -14,6 +14,7 @@ var Terminal = {
    acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
    shownEmail:false,     // if I've shown my address, compose an email
+   skip:false,
 
    // keycode constants
    keycode:Object.freeze({ENTER: 13, BACKSPACE: 8}),
@@ -44,7 +45,7 @@ var Terminal = {
             Terminal.acceptingInput = false;
             Terminal.printResume();
          });
-         createAllPokemon();
+         // createAllPokemon();
       });
    },
 
@@ -54,6 +55,7 @@ var Terminal = {
     */
    startTyping:function() {
       Terminal.typer = setInterval(function() {Terminal.type();}, 1);
+      console.log("started typing");
    },
 
    /**
@@ -63,8 +65,17 @@ var Terminal = {
     */
    type:function() {
       Terminal.addText();
+      console.log("added text");
       if (Terminal.index > Terminal.text.length) {
          Terminal.stopTyping();
+      }
+
+      if(Terminal.skip) {
+         Terminal.stopTyping();
+         while(Terminal.index <= Terminal.text.length) {
+            Terminal.addText();
+         }
+         Terminal.skip = false;
       }
    },
 
@@ -74,6 +85,7 @@ var Terminal = {
     */
    stopTyping:function() {
       clearInterval(Terminal.typer);
+      console.log("stopped typing");
    },
 
    /**
@@ -129,6 +141,7 @@ var Terminal = {
       // keyboard listener for terminal input
       document.addEventListener("keypress", function(event) {
             if(Terminal.acceptingInput) {
+               console.log("accepting input");
                character = String.fromCharCode(event.which);
 
                // User hit enter
@@ -159,6 +172,7 @@ var Terminal = {
                   }
                   else {
                      Terminal.showMessage(-1);
+                     console.log("show error message");
                   }
                }
 
@@ -185,10 +199,9 @@ var Terminal = {
             }
             // skip animation
             else {
-               // Terminal.stopTyping();
-               // while(Terminal.index > Terminal.text.length) {
-               //    Terminal.addText();
-               // }
+               console.log("not accepting input");
+               Terminal.skip = true;
+               console.log("skipped");
             }
       });
    },
@@ -269,8 +282,10 @@ var Terminal = {
       }
       else if(char.includes("`")) {
          Terminal.contentOffset -= "`".length;
-         Terminal.stopTyping();
-         setTimeout(Terminal.startTyping, Terminal.pauseDuration);
+         if(!Terminal.skip) {
+            Terminal.stopTyping();
+            setTimeout(Terminal.startTyping, Terminal.pauseDuration);
+         }
       }
       else if(char.includes("\\")) {
          Terminal.clear();
