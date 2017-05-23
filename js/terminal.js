@@ -55,7 +55,6 @@ var Terminal = {
     */
    startTyping:function() {
       Terminal.typer = setInterval(function() {Terminal.type();}, 1);
-      console.log("started typing");
    },
 
    /**
@@ -65,7 +64,6 @@ var Terminal = {
     */
    type:function() {
       Terminal.addText();
-      console.log("added text");
       if (Terminal.index > Terminal.text.length) {
          Terminal.stopTyping();
       }
@@ -85,7 +83,6 @@ var Terminal = {
     */
    stopTyping:function() {
       clearInterval(Terminal.typer);
-      console.log("stopped typing");
    },
 
    /**
@@ -141,14 +138,12 @@ var Terminal = {
       // keyboard listener for terminal input
       document.addEventListener("keypress", function(event) {
             if(Terminal.acceptingInput) {
-               console.log("accepting input");
                character = String.fromCharCode(event.which);
 
                // User hit enter
                if (event.which == Terminal.keycode.ENTER) {
                   event.preventDefault();
                   Terminal.acceptingInput = false;
-                  console.log("Your input was: " + Terminal.input);
                   Terminal.contentOffset--;
                   if (Terminal.input == "1") {
                      Terminal.input = "";
@@ -168,11 +163,10 @@ var Terminal = {
                   }
                   else if (Terminal.input == "pokemon") {
                      Terminal.showMessage(4);
-                     createPokemon();
+                     createAllPokemon();
                   }
                   else {
                      Terminal.showMessage(-1);
-                     console.log("show error message");
                   }
                }
 
@@ -199,9 +193,7 @@ var Terminal = {
             }
             // skip animation
             else {
-               console.log("not accepting input");
                Terminal.skip = true;
-               console.log("skipped");
             }
       });
    },
@@ -219,7 +211,7 @@ var Terminal = {
             Terminal.text += "downloading resume...";
             break;
 
-         // Contact me
+         // contact me
          case 3:
             if(Terminal.shownEmail) {
                Terminal.text += "attempting to launch your email client...";
@@ -232,11 +224,12 @@ var Terminal = {
             }
             break;
 
+         // pokemon
          case 4:
             Terminal.text += "initiating pokemon...";
             break;
 
-         // Error code
+         // error code
          case (-1):
             Terminal.text += "<span class=\"error\">"
                           +  "enter number between 1 and 3...</span>";
