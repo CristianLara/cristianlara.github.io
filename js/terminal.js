@@ -136,9 +136,9 @@ var Terminal = {
     */
    addInputListener:function() {
       // keyboard listener for terminal input
-      document.addEventListener("keypress", function(event) {
+      document.addEventListener("keydown", function(event) {
             if(Terminal.acceptingInput) {
-               character = String.fromCharCode(event.which);
+               character = String.fromCharCode(event.which).toLowerCase();
 
                // User hit enter
                if (event.which == Terminal.keycode.ENTER) {
