@@ -130,7 +130,7 @@ Pokemon.prototype.walkIn = function(target) {
 			this.sprite.style.left = this.posX + 'px';
 
 			setTimeout(function(target, ref) {
-				ref.walkIn(target); 
+				ref.walkIn(target);
 			}, 100, target, this);
 		} else {
 			// reached target, stop walking in
@@ -147,7 +147,7 @@ Pokemon.prototype.walkIn = function(target) {
 			this.sprite.style.left = this.posX + 'px';
 
 			setTimeout(function(target, ref) {
-				ref.walkIn(target); 
+				ref.walkIn(target);
 			}, 100, target, this);
 		} else {
 			// reached target, stop walking in
@@ -197,6 +197,19 @@ Pokemon.prototype.animate = function() {
 
 		    default: break;
 		}
+
+		if(document.getElementById(this.name).getBoundingClientRect().top > $(window).height()) {
+         this.posY -= $(window).height();
+      }
+      if(document.getElementById(this.name).getBoundingClientRect().left > $(window).width()) {
+         this.posX -= $(window).width();
+      }
+      if(document.getElementById(this.name).getBoundingClientRect().top < 0) {
+         this.posY += $(window).height();
+      }
+      if(document.getElementById(this.name).getBoundingClientRect().left < 0) {
+         this.posX += $(window).width();
+      }
 
 	  document.getElementById(this.name).style.left =this.posX + 'px';
 	  document.getElementById(this.name).style.top = this.posY + 'px';
