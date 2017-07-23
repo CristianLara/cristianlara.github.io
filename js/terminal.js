@@ -421,9 +421,9 @@ var Sprite = {
       });
       $(window).on('load', function() {
          Sprite.sprite = document.getElementById("sprite");
+         Sprite.cacheImages();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
-      Sprite.cacheImages();
    },
 
    cacheImages:function() {
@@ -501,8 +501,21 @@ var Sprite = {
          default: break;
       }
 
-      document.getElementById("sprite").style.left = Sprite.posX + 'px';
-      document.getElementById("sprite").style.top = Sprite.posY + 'px';
+      if(Sprite.sprite.getBoundingClientRect().top > $(window).height()) {
+         Sprite.posY -= $(window).height();
+      }
+      if(Sprite.sprite.getBoundingClientRect().left > $(window).width()) {
+         Sprite.posX -= $(window).width();
+      }
+      if(Sprite.sprite.getBoundingClientRect().top < 0) {
+         Sprite.posY += $(window).height();
+      }
+      if(Sprite.sprite.getBoundingClientRect().left < 0) {
+         Sprite.posX += $(window).width();
+      }
+
+      Sprite.sprite.style.left = Sprite.posX + 'px';
+      Sprite.sprite.style.top = Sprite.posY + 'px';
       Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
 
       if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 60);
