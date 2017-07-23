@@ -112,9 +112,9 @@ var Terminal = {
    insert:function(str) {
       Terminal.removeCursor();
       var content = Terminal.content();
-      var contentBefore = 
+      var contentBefore =
          content.substring(0, Terminal.index + Terminal.contentOffset - 1);
-      var contentAfter = 
+      var contentAfter =
          content.substring(Terminal.index + Terminal.contentOffset - 1);
 
       $("#text").html(contentBefore + str + contentAfter);
@@ -336,14 +336,14 @@ var Terminal = {
       // if the next character is an html tag
       else if(Terminal.pending == (Terminal.htmlIndicator)) {
          Terminal.handleHtml();
-      } 
+      }
       // it's just a normal character to insert
       else {
          Terminal.insert(Terminal.pending);
       }
 
       window.scrollBy(0,50); // scroll to make sure bottom is always visible
-      
+
    },
 
    printResume:function() {
@@ -423,6 +423,55 @@ var Sprite = {
          Sprite.sprite = document.getElementById("sprite");
       });
       Sprite.direction = Sprite.keycode.RIGHT;
+      Sprite.cacheImages();
+   },
+
+   cacheImages:function() {
+      var images = new Array();
+		function preload() {
+			for (i = 0; i < preload.arguments.length; i++) {
+				images[i] = new Image()
+				images[i].src = preload.arguments[i]
+			}
+		};
+		preload(
+         "img/me/down0.png",
+         "img/me/down1.png",
+         "img/me/down2.png",
+         "img/me/down3.png",
+         "img/me/down4.png",
+         "img/me/down5.png",
+         "img/me/down6.png",
+         "img/me/down7.png",
+         "img/me/down8.png",
+         "img/me/left0.png",
+         "img/me/left1.png",
+         "img/me/left2.png",
+         "img/me/left3.png",
+         "img/me/left4.png",
+         "img/me/left5.png",
+         "img/me/left6.png",
+         "img/me/left7.png",
+         "img/me/left8.png",
+         "img/me/up0.png",
+         "img/me/up1.png",
+         "img/me/up2.png",
+         "img/me/up3.png",
+         "img/me/up4.png",
+         "img/me/up5.png",
+         "img/me/up6.png",
+         "img/me/up7.png",
+         "img/me/up8.png",
+         "img/me/right0.png",
+         "img/me/right1.png",
+         "img/me/right2.png",
+         "img/me/right3.png",
+         "img/me/right4.png",
+         "img/me/right5.png",
+         "img/me/right6.png",
+         "img/me/right7.png",
+         "img/me/right8.png"
+		);
    },
 
    /**
@@ -455,7 +504,7 @@ var Sprite = {
       document.getElementById("sprite").style.left = Sprite.posX + 'px';
       document.getElementById("sprite").style.top = Sprite.posY + 'px';
       Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
-      
+
       if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 60);
    },
 
@@ -492,4 +541,3 @@ Terminal.userName = "cristianlara"
 Terminal.init();
 Sprite.init();
 Terminal.startTyping();
-
