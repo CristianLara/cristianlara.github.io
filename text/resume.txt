@@ -31,6 +31,9 @@
  *   *   *   WORK EXPERIENCE   *   *   *
 -----------------------------------------</span>`
 
+ <span class="b">-</span> Angaza <span class="b">/</span> San Francisco, CA
+   Software Developer <span class="b">/</span> June 2017 - September 2017
+
  <span class="b">-</span> Stanford High Performance Computing Cluster <span class="b">/</span> Stanford, CA
    Software Developer <span class="b">/</span> April 2015 - Present
 
@@ -40,10 +43,5 @@
  <span class="b">-</span> Cydia SaurikIT <span class="b">/</span> Isla Vista, CA
    iPhone Theme Designer and Software Developer <span class="b">/</span> May 2011 - February 2013
 </pre>
-
-Click/Enter an option:
-<a id="one" href="#"><span class="c">[1]</span> Display web formatted resume</a>
-<a id="two" href="files/resume_cristianlara.pdf" title="resume_cristianlara.pdf" target="_blank"><span class="c">[2]</span> Download resume pdf</a>
-<a id="three" href="mailto:cristianlara@stanford.edu"><span class="c">[3]</span> Contact me</a>
 
 $
