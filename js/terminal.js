@@ -7,20 +7,20 @@ var Terminal = {
    speed:1,              // number of letters to add at a time
    file:"",              // name of text file to get text from
    pending:"",           // pending string of text to type
-   insertingHtml:false,  // indicates if we inserting text between html tags
+   insertingHtml:false,  // indicates if we're inserting text between html tags
    contentOffset:0,      // the offset in the content compared to the textfile
    pauseDuration:500,    // duration of pause action in milliseconds
    htmlIndicator:"<",    // character indicating that we have encountered html
    acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
    shownEmail:false,     // if I've shown my address, compose an email
-   skip:false,
+   skip:false,           // controls skipping typing animation
 
    // keycode constants
    keycode:Object.freeze({ENTER: 13, BACKSPACE: 8, SPACE: 32}),
 
    // these characters are interpreted as special actions when read
-   // i.e. linebreak, pause, clear
+   // i.e. linebreak, pause, clear, preformatted message
    specialCharacters:["\n", "\\", "`", "$"],
 
    /**
