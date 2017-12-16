@@ -2,7 +2,9 @@
 
 I'm an undergraduate at Stanford University, class of '18. I have a passion for tinkering, designing, and programming. One of my biggest interests is the intersection of design and mobile. If I don't have homework for whatever reason, you'll likely find me tinkering with the theme on my jailbroken phone, shooting arrows with my bow, or playing ping pong.`
 
-I used to create and sell themes for jailbroken iPhones, was a software intern at Cyanogen, and worked at Stanford's High Performance Computing Center. I'm currently a software intern at <a class="c" href="http://www.angaza.com" target="_blank">Angaza</a>.```
+I used to create and sell themes for jailbroken iPhones via <a class="c" href="https://en.wikipedia.org/wiki/Cydia" target="_blank">Cydia</a>, created automated theming solutions at <a class="c" href="https://en.wikipedia.org/wiki/CyanogenMod" target="_blank">Cyanogen</a>, worked at Stanford's <a class="c" href="https://hpcc.stanford.edu" target="_blank">High Performance Computing Center</a>, and worked on a platform for increasing accessibility of affordable solar power in developing countries as a software intern at <a class="c" href="http://www.angaza.com" target="_blank">Angaza</a>.```
+
+I'm currently looking for full time employment post graduation.
 
 <a id="one" href="#"><span class="c">[1]</span> Display web formatted resume</a>
 <a id="two" href="files/resume_cristianlara.pdf" title="resume_cristianlara.pdf" target="_blank"><span class="c">[2]</span> Download resume pdf</a>
