@@ -3,6 +3,7 @@ body {
    font-family: 'Roboto Mono', monospace;
    font-style: normal;
    font-weight: 300;
+   color: #fff;
 }
 
 #console {
@@ -33,13 +34,36 @@ body {
    font-size:13px;
 }
 
+.spriteContainer {
+    position: relative;
+    left: 469px;
+    top: -64px;
+    z-index: 2;
+}
+
+#tip {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    line-height: 1;
+    position: absolute;
+    top: -60px;
+    left: 10px;
+    width: 150px;
+    height: 50px;
+
+    opacity: 0;
+    /* visibility: hidden; */
+
+    /* -webkit-transition: opacity 2s; /* Safari */
+    /* transition: opacity 2s; */
+}
+
 #sprite {
    position: relative;
-   top: -64px;
-   left: 465px;
+   /* top: -64px;
+   left: 465px; */
    height: 52px;
    width: 30px;
-   z-index: 2;
 }
 
 #charizard {

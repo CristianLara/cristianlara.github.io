@@ -3,6 +3,8 @@ var Sprite = {
 
    // reference to DOM sprite element
    sprite:document.getElementById("sprite"),
+   container:document.getElementsByClassName('spriteContainer')[0],
+   tip:document.getElementById("tip"),
 
    posX:465,       // X position in pixels
    posY:-64,       // Y position in pixels
@@ -27,13 +29,17 @@ var Sprite = {
       });
       $(window).on('load', function() {
          Sprite.sprite = document.getElementById("sprite");
+         Sprite.container = document.getElementsByClassName('spriteContainer')[0];
+         Sprite.tip = document.getElementById('tip');
+         Sprite.writeTip('skip with \'space\'');
+         Sprite.showTip(2000, 3000);
          Sprite.cacheImages();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
    },
 
    cacheImages:function() {
-      var images = new Array();
+    var images = new Array();
 		function preload() {
 			for (i = 0; i < preload.arguments.length; i++) {
 				images[i] = new Image()
@@ -80,6 +86,28 @@ var Sprite = {
 		);
    },
 
+   showTip:function(onDelay, offDelay) {
+     setTimeout(function() {
+       $('#tip').fadeTo(400, 1, function() {
+         setTimeout(function() {
+           $('#tip').fadeTo(400, 0);
+         }, offDelay);
+       });
+     }, onDelay);
+   },
+
+   writeTip:function(content) {
+     let widthFill = ''
+     for (i = 0; i < content.length; i++) {
+       widthFill += '-'
+     }
+     $("#tip").html(
+`+-${widthFill}-+
+| ${content} |
++-${widthFill}-+`
+    );
+   },
+
    /**
     * takeStep()
     * change direction and location of sprite
@@ -120,8 +148,8 @@ var Sprite = {
          Sprite.posX += $(window).width();
       }
 
-      Sprite.sprite.style.left = Sprite.posX + 'px';
-      Sprite.sprite.style.top = Sprite.posY + 'px';
+      Sprite.style.left = Sprite.posX + 'px';
+      Sprite.container.style.top = Sprite.posY + 'px';
       Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
 
       if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 60);
