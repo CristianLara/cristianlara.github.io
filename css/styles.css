@@ -36,6 +36,7 @@ body {
 
 .spriteContainer {
     position: relative;
+    display: inline-block;
     left: 469px;
     top: -64px;
     z-index: 2;
