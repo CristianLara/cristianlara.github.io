@@ -22,7 +22,7 @@ var Sprite = {
    currentTip: 0,
    orderedTips:[
      { content: 'skip with \'space\'', delay: 2000, duration: 3000 },
-     { content: 'try your arrow keys!', delay: 4000, duration: 3000 }
+     { content: 'try your arrow keys!', delay: 10000, duration: 3000 }
    ],
 
    init:function() {
