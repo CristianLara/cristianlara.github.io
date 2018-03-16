@@ -31,8 +31,7 @@ var Sprite = {
          Sprite.sprite = document.getElementById("sprite");
          Sprite.container = document.getElementsByClassName('spriteContainer')[0];
          Sprite.tip = document.getElementById('tip');
-         Sprite.writeTip('skip with \'space\'');
-         Sprite.showTip(2000, 3000);
+         Sprite.showTip('skip with \'space\'', 2000, 3000);
          Sprite.cacheImages();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
@@ -86,16 +85,25 @@ var Sprite = {
 		);
    },
 
-   showTip:function(onDelay, offDelay) {
+   /**
+    * showTip()
+    * shows tip after 'onDelay' ms for 'offDelay' ms
+    */
+   showTip:function(content, onDelay, offDelay) {
+     Sprite.writeTip(content);
      setTimeout(function() {
-       $('#tip').fadeTo(400, 1, function() {
+       $('#tip').fadeTo(500, 1, function() {
          setTimeout(function() {
-           $('#tip').fadeTo(400, 0);
+           $('#tip').fadeTo(800, 0);
          }, offDelay);
        });
      }, onDelay);
    },
 
+   /**
+    * writeTip()
+    * helper function to generate formatted tip text
+    */
    writeTip:function(content) {
      let widthFill = ''
      for (i = 0; i < content.length; i++) {
@@ -148,10 +156,10 @@ var Sprite = {
          Sprite.posX += $(window).width();
       }
 
-      Sprite.style.left = Sprite.posX + 'px';
+      Sprite.container.style.left = Sprite.posX + 'px';
       Sprite.container.style.top = Sprite.posY + 'px';
-      Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
-
+      const spriteName = Sprite.directionText[Sprite.direction] + Sprite.step;
+      Sprite.sprite.src = "img/me/" + spriteName + ".png";
       if(Sprite.step != 0) setTimeout(function() { Sprite.takeStep(); }, 60);
    },
 
@@ -169,7 +177,8 @@ var Sprite = {
     */
    walk:function() {
       Sprite.step = (Sprite.step + 1) % Sprite.stepsInCycle;
-      Sprite.sprite.src = "img/me/" + Sprite.directionText[Sprite.direction] + Sprite.step + ".png";
+      const spriteName = Sprite.directionText[Sprite.direction] + Sprite.step;
+      Sprite.sprite.src = "img/me/" + spriteName + ".png";
    },
 
    /**
