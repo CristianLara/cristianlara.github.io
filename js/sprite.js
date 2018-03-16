@@ -26,19 +26,25 @@ var Sprite = {
    ],
 
    init:function() {
-      // keyboard listener for sprite control
-      document.addEventListener("keydown", function(event) {
-         if(event.which >= Sprite.keycode.LEFT && event.which <= Sprite.keycode.DOWN) {
-            event.preventDefault(); // prevent arrow keys from scrolling
-            Sprite.direction = event.which;
-            Sprite.takeStep();
-         }
-      });
       $(window).on('load', function() {
          Sprite.sprite = document.getElementById("sprite");
          Sprite.container = document.getElementsByClassName('spriteContainer')[0];
+
+         // keyboard listener for sprite control
+         document.addEventListener("keydown", function(event) {
+            if(event.which >= Sprite.keycode.LEFT && event.which <= Sprite.keycode.DOWN) {
+               event.preventDefault(); // prevent arrow keys from scrolling
+               Sprite.direction = event.which;
+               Sprite.takeStep();
+            }
+         });
+
+         Sprite.sprite.addEventListener("mousedown", function(event) {
+            Sprite.showTip('Hello!', 1000);
+         });
+
          Sprite.tip = document.getElementById('tip');
-         Sprite.showTip();
+         Sprite.cycleTips();
          Sprite.cacheImages();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
@@ -93,10 +99,10 @@ var Sprite = {
    },
 
    /**
-    * showTip()
+    * cycleTips()
     * shows tip after 'onDelay' ms for 'offDelay' ms
     */
-   showTip:function(content, onDelay, offDelay) {
+   cycleTips:function(content) {
      if (Sprite.currentTip >= Sprite.orderedTips.length) return;
      const tip = Sprite.orderedTips[Sprite.currentTip];
      Sprite.writeTip(tip.content);
@@ -109,7 +115,7 @@ var Sprite = {
            $('#tip').fadeTo(800, 0, function() {
              // once faded out, delay for next tip
              Sprite.currentTip++;
-             Sprite.showTip();
+             Sprite.cycleTips();
            });
          }, tip.duration);
        });
@@ -130,6 +136,19 @@ var Sprite = {
 | ${content} |
 +-${widthFill}-+`
     );
+   },
+
+   /**
+    * showTip()
+    * immediately shows tip with 'content' for 'duration' ms
+    */
+   showTip:function(content, duration) {
+     Sprite.writeTip(content);
+     $('#tip').fadeTo(400, 1, function() {
+       setTimeout(function() {
+         $('#tip').fadeTo(800, 0);
+       }, duration);
+     });
    },
 
    /**

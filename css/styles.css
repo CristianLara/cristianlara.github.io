@@ -61,10 +61,12 @@ body {
 
 #sprite {
    position: relative;
-   /* top: -64px;
-   left: 465px; */
    height: 52px;
    width: 30px;
+}
+
+#sprite:hover {
+  cursor: pointer;
 }
 
 #charizard {
