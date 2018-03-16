@@ -18,6 +18,13 @@ var Sprite = {
    directionText:Object.freeze({37:"left", 38:"up", 39:"right", 40:"down"}),
    keycode:Object.freeze({LEFT: 37, UP: 38, RIGHT: 39, DOWN:40}),
 
+   // tips with their associated delays
+   currentTip: 0,
+   orderedTips:[
+     { content: 'skip with \'space\'', delay: 2000, duration: 3000 },
+     { content: 'try your arrow keys!', delay: 4000, duration: 3000 }
+   ],
+
    init:function() {
       // keyboard listener for sprite control
       document.addEventListener("keydown", function(event) {
@@ -31,7 +38,7 @@ var Sprite = {
          Sprite.sprite = document.getElementById("sprite");
          Sprite.container = document.getElementsByClassName('spriteContainer')[0];
          Sprite.tip = document.getElementById('tip');
-         Sprite.showTip('skip with \'space\'', 2000, 3000);
+         Sprite.showTip();
          Sprite.cacheImages();
       });
       Sprite.direction = Sprite.keycode.RIGHT;
@@ -90,14 +97,23 @@ var Sprite = {
     * shows tip after 'onDelay' ms for 'offDelay' ms
     */
    showTip:function(content, onDelay, offDelay) {
-     Sprite.writeTip(content);
+     if (Sprite.currentTip >= Sprite.orderedTips.length) return;
+     const tip = Sprite.orderedTips[Sprite.currentTip];
+     Sprite.writeTip(tip.content);
+
+     // create delay for tip
      setTimeout(function() {
        $('#tip').fadeTo(500, 1, function() {
+         // once faded in, delay for fade out
          setTimeout(function() {
-           $('#tip').fadeTo(800, 0);
-         }, offDelay);
+           $('#tip').fadeTo(800, 0, function() {
+             // once faded out, delay for next tip
+             Sprite.currentTip++;
+             Sprite.showTip();
+           });
+         }, tip.duration);
        });
-     }, onDelay);
+     }, tip.delay);
    },
 
    /**
