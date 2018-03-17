@@ -13,7 +13,6 @@ var Terminal = {
    htmlIndicator:"<",    // character indicating that we have encountered html
    acceptingInput:false, // indicating if accepting user input
    input:"",             // input text from user
-   shownEmail:false,     // if I've shown my address, compose an email
    skip:false,           // controls skipping typing animation
 
    // keycode constants
@@ -44,6 +43,12 @@ var Terminal = {
             Terminal.write('\n');
             Terminal.acceptingInput = false;
             Terminal.printResume();
+         });
+         $("#console").on('click', "#three", function() {
+            Terminal.clearInput();
+            Terminal.write('3');
+            Terminal.acceptingInput = false;
+            Terminal.showMessage(3);
          });
          // createAllPokemon();
       });
@@ -155,11 +160,6 @@ var Terminal = {
                   }
                   else if (Terminal.input == "3") {
                      Terminal.showMessage(3);
-                     if(Terminal.shownEmail) {
-                        Terminal.emailMe();
-                     } else {
-                        Terminal.shownEmail = true;
-                     }
                   }
                   else if (Terminal.input == "pokemon") {
                      Terminal.showMessage(4);
@@ -215,15 +215,8 @@ var Terminal = {
 
          // contact me
          case 3:
-            if(Terminal.shownEmail) {
-               Terminal.text += "attempting to launch your email client...";
-            } else {
-               Terminal.text += "you can contact me at "
-                             +  "cristianlara@stanford.edu\n"
-                             +  "<span class=\"c\">tip</span>: "
-                             +  "enter 3 again to auto compose an email to me "
-                             +  "via your default email client";
-            }
+            Terminal.text += "you can contact me at "
+                          +  "<a class=\"c\" href=\"mailto:cristianlara@stanford.edu\">cristianlara@stanford.edu</a>";
             break;
 
          // pokemon
@@ -319,7 +312,7 @@ var Terminal = {
 
    /**
     * addText()
-    * Goes through the text file typing it out into the Terminal one letter at a time.
+    * Goes through text file typing it into the Terminal one letter at a time.
     * Recognizes html and adds the tags before typing out the inner content.
     */
    addText:function() {

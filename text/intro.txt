@@ -8,6 +8,6 @@ I'm currently looking for full time employment post graduation.
 
 <a id="one" href="#"><span class="c">[1]</span> Display web formatted resume</a>
 <a id="two" href="files/resume_cristianlara.pdf" title="resume_cristianlara.pdf" target="_blank"><span class="c">[2]</span> Download resume pdf</a>
-<a id="three" href="mailto:cristianlara@stanford.edu"><span class="c">[3]</span> Contact me</a>
+<a id="three" href="#"><span class="c">[3]</span> Contact me</a>
 
 $
