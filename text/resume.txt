@@ -32,15 +32,18 @@
 -----------------------------------------</span>`
 
  <span class="b">-</span> Angaza <span class="b">/</span> San Francisco, CA
-   Software Developer <span class="b">/</span> June 2017 - September 2017
+   Software Developer <span class="b">/</span> July 2018 - Present
+
+ <span class="b">-</span> Angaza <span class="b">/</span> San Francisco, CA
+   Software Developer Intern <span class="b">/</span> June 2017 - September 2017
 
  <span class="b">-</span> Stanford High Performance Computing Cluster <span class="b">/</span> Stanford, CA
-   Software Developer <span class="b">/</span> April 2015 - Present
+   Software Developer <span class="b">/</span> April 2015 - June 2017
 
  <span class="b">-</span> Cyanogen <span class="b">/</span> Palo Alto, CA
    Software Developer Intern <span class="b">/</span> June 2016 - August 2016
 
- <span class="b">-</span> Cydia SaurikIT <span class="b">/</span> Isla Vista, CA
+ <span class="b">-</span> Cydia SaurikIT <span class="b">/</span> Remote
    iPhone Theme Designer and Software Developer <span class="b">/</span> May 2011 - February 2013
 </pre>
 
