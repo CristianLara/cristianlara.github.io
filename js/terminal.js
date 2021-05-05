@@ -216,7 +216,7 @@ var Terminal = {
          // contact me
          case 3:
             Terminal.text += "you can contact me at "
-                          +  "<a class=\"c\" href=\"mailto:cristianlara@stanford.edu\">cristianlara@stanford.edu</a>";
+                          +  "<a class=\"c\" href=\"mailto:cristianlara@alumni.stanford.edu\">cristianlara@alumni.stanford.edu</a>";
             break;
 
          // pokemon
