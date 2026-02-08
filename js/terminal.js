@@ -390,7 +390,7 @@ var Terminal = {
     */
    callLLM: function (prompt) {
       // Terminal.showMessage(7, false); // "Querying LLM..."
-      fetch('https://cristianlara-github-b1i4snnld-cristian-laras-projects-09c8954c.vercel.app/api/openrouter-proxy', {
+      fetch('https://cristianlara-github-dwiegn4w8-cristian-laras-projects-09c8954c.vercel.app/api/openrouter-proxy', {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json'
