@@ -31,8 +31,7 @@ var Terminal = {
     */
    isValidChar: function (char) {
       if (!char || char.length !== 1) return false;
-      return (char >= 0 && char <= 9) ||
-         (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
+      return /^[a-zA-Z0-9 .,?!;:@\-_'"()\[\]{}\/\\|+=*&%$#~\^]+$/.test(char);
    },
 
    /**
@@ -188,7 +187,7 @@ var Terminal = {
       else if (Terminal.input == "3") {
          Terminal.showMessage(3);
       }
-      else if (Terminal.input == "pokemon" || Terminal.input == "4") {
+      else if (Terminal.input.toLowerCase() == "pokemon" || Terminal.input == "4") {
          if (Terminal.pokemonInitiated) {
             Terminal.showMessage(5);
          } else {
@@ -305,9 +304,9 @@ var Terminal = {
 
             // User hit a printable character key
             else {
-               var character = String.fromCharCode(event.which);
+               var character = event.key;
                if (Terminal.isValidChar(character)) {
-                  Terminal.processCharacter(character.toLowerCase());
+                  Terminal.processCharacter(character);
                }
             }
          }
