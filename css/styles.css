@@ -22,7 +22,7 @@ body {
    line-height: 1.5;
    border-radius: 16px;
    padding: 24;
-   margin-bottom: 48px;
+   margin-bottom: 56px;
    z-index: 200;
 }
 
@@ -234,7 +234,7 @@ pre {
 			#0bc 60%,
 			#0bc 100%
 		),
-		linear-gradient(rgba(28, 58, 62, 0.9), rgba(28, 58, 62, 0.9));
+		linear-gradient(rgba(19, 39, 42, 0.9), rgba(19, 39, 42, 0.9));
 	background-size: 250% 100%, 100% 100%;
 	background-position: 100% 0, 0 0;
 	background-clip: text, border-box;
@@ -279,55 +279,64 @@ pre {
 	transition: none;
 }
 
-/* Combined text shimmer and border glow animation for tap hint */
+/* Combined text shimmer and border glow animation for tap hint - dramatic version */
 @keyframes tap-hint-glimmer {
 	/* Organic, flowy glow with shifting positions and asymmetric layers */
 	0% {
 		background-position: 100% 0, 0 0;
 		box-shadow: 
-			/* Layer 1: Bottom-right, soft, slow breathing */
-			4px 4px 8px rgba(0, 140, 160, 0.2),
-			/* Layer 2: Top-left, sharper, medium pulse */
-			-3px -2px 6px rgba(80, 210, 230, 0.15),
-			/* Layer 3: Center, subtle base glow */
-			0 0 4px rgba(0, 188, 204, 0.3);
+			/* Layer 1: Bottom-right, soft base */
+			6px 6px 12px rgba(0, 140, 160, 0.3),
+			/* Layer 2: Top-left, sharper */
+			-5px -4px 10px rgba(80, 210, 230, 0.25),
+			/* Layer 3: Center, base glow */
+			0 0 8px rgba(0, 188, 204, 0.4),
+			/* Layer 4: Outer dramatic glow */
+			0 0 30px rgba(0, 188, 204, 0.15);
 	}
 	25% {
 		background-position: 50% 0, 0 0;
 		box-shadow: 
-			/* Layer 1 shifts up-left, intensifies */
-			2px 2px 12px rgba(0, 140, 160, 0.35),
-			/* Layer 2 shifts right, softens */
-			-1px -1px 10px rgba(80, 210, 230, 0.25),
-			/* Layer 3 expands */
-			0 0 8px rgba(0, 188, 204, 0.4);
+			/* Layer 1 shifts up-left, intensifies dramatically */
+			3px 3px 20px rgba(0, 140, 160, 0.6),
+			/* Layer 2 shifts right, grows */
+			-2px -2px 18px rgba(80, 210, 230, 0.5),
+			/* Layer 3 expands significantly */
+			0 0 15px rgba(0, 188, 204, 0.7),
+			/* Layer 4: Outer glow peaks */
+			0 0 50px rgba(0, 188, 204, 0.35);
 	}
 	50% {
 		background-position: 0% 0, 0 0;
 		box-shadow: 
 			/* Layer 1 shifts to top-right */
-			3px -3px 10px rgba(0, 140, 160, 0.25),
+			5px -5px 16px rgba(0, 140, 160, 0.45),
 			/* Layer 2 shifts down-left, peaks */
-			-4px 2px 14px rgba(80, 210, 230, 0.3),
+			-6px 4px 22px rgba(80, 210, 230, 0.55),
 			/* Layer 3 contracts */
-			0 0 5px rgba(0, 188, 204, 0.35);
+			0 0 10px rgba(0, 188, 204, 0.5),
+			/* Layer 4: Outer glow moderates */
+			0 0 40px rgba(0, 188, 204, 0.25);
 	}
 	75% {
 		background-position: 50% 0, 0 0;
 		box-shadow: 
-			/* Layer 1 returns toward center */
-			1px 1px 14px rgba(0, 140, 160, 0.4),
-			/* Layer 2 moves to bottom-right */
-			2px 3px 8px rgba(80, 210, 230, 0.2),
-			/* Layer 3 pulses again */
-			0 0 10px rgba(0, 188, 204, 0.45);
+			/* Layer 1 returns toward center, intense */
+			2px 2px 24px rgba(0, 140, 160, 0.65),
+			/* Layer 2 moves to bottom-right, softer */
+			3px 5px 14px rgba(80, 210, 230, 0.4),
+			/* Layer 3 pulses bigger */
+			0 0 18px rgba(0, 188, 204, 0.75),
+			/* Layer 4: Outer glow pulses again */
+			0 0 55px rgba(0, 188, 204, 0.4);
 	}
 	100% {
 		background-position: 100% 0, 0 0;
 		box-shadow: 
-			4px 4px 8px rgba(0, 140, 160, 0.2),
-			-3px -2px 6px rgba(80, 210, 230, 0.15),
-			0 0 4px rgba(0, 188, 204, 0.3);
+			6px 6px 12px rgba(0, 140, 160, 0.3),
+			-5px -4px 10px rgba(80, 210, 230, 0.25),
+			0 0 8px rgba(0, 188, 204, 0.4),
+			0 0 30px rgba(0, 188, 204, 0.15);
 	}
 }
 
