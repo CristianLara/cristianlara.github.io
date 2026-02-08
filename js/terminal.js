@@ -343,8 +343,10 @@ var Terminal = {
 
          // contact me
          case 3:
-            Terminal.text += "you can contact me at "
-               + "<a class=\"c\" href=\"mailto:cristianlara@alumni.stanford.edu\">cristianlara@alumni.stanford.edu</a>";
+            Terminal.text +=
+               "Email: <a class=\"c\" href=\"mailto:cristianlara@alumni.stanford.edu\">cristianlara@alumni.stanford.edu</a><br>"
+               + "GitHub: <a class=\"c\" href=\"https://github.com/CristianLara\" target=\"_blank\">github.com/CristianLara</a><br>"
+               + "LinkedIn: <a class=\"c\" href=\"https://www.linkedin.com/in/cristian-lara/\" target=\"_blank\">linkedin.com/in/cristian-lara</a>";
             break;
 
          // pokemon
