@@ -396,7 +396,7 @@ var Terminal = {
          },
          body: JSON.stringify({
             prompt: prompt,
-            model: 'openai/gpt-oss-120b:free'
+            model: 'openai/gpt-oss-20b:free'
          })
       })
          .then(response => response.json())
