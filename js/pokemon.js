@@ -185,24 +185,18 @@ Pokemon.prototype.animate = function () {
 				break;
 
 			case this.keycode.DOWN:
-				this.posY += this.stepSize;
+				this.posY = Math.floor(this.posY + this.stepSize, $(window).height());
 				break;
 
 			case this.keycode.UP:
-				this.posY -= this.stepSize;
+				this.posY = Math.max(this.posY + this.stepSize, 0);
 				break;
 
 			default: break;
 		}
 
-		if (document.getElementById(this.name).getBoundingClientRect().top > $(window).height()) {
-			this.posY -= $(window).height();
-		}
 		if (document.getElementById(this.name).getBoundingClientRect().left > $(window).width()) {
 			this.posX -= $(window).width();
-		}
-		if (document.getElementById(this.name).getBoundingClientRect().top < 0) {
-			this.posY += $(window).height();
 		}
 		if (document.getElementById(this.name).getBoundingClientRect().left < 0) {
 			this.posX += $(window).width();

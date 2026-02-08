@@ -67,8 +67,7 @@ var Terminal = {
          });
          $("#console").on('click', "#four", function () {
             Terminal.clearInput();
-            const command = "pokemon";
-            for (const char of command) {
+            for (const char of "pokemon") {
                Terminal.processCharacter(char);
             }
             Terminal.processEnter()
