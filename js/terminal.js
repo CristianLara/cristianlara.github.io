@@ -174,6 +174,7 @@ var Terminal = {
 
       Terminal.acceptingInput = false;
       document.getElementById('console').classList.remove('accepting-input');
+      Terminal.contentOffset += Terminal.input.length - 1;
 
       if (Terminal.input == "1") {
          Terminal.clearInput();
@@ -187,7 +188,6 @@ var Terminal = {
          Terminal.showMessage(3);
       }
       else if (Terminal.input == "pokemon" || Terminal.input == "4") {
-         Terminal.contentOffset += Terminal.input.length - 1;
          Terminal.showMessage(4);
          createAllPokemon();
       }
