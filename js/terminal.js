@@ -198,7 +198,7 @@ var Terminal = {
          }
       }
       else {
-         Terminal.showMessage(-1);
+         Terminal.callLLM(Terminal.input);
       }
    },
 
@@ -333,7 +333,7 @@ var Terminal = {
       Terminal.input = "";
    },
 
-   showMessage: function (code) {
+   showMessage: function (code, skipPrompt = false) {
       Terminal.text += " \n";
       switch (code) {
          // download resume
@@ -359,6 +359,11 @@ var Terminal = {
             Terminal.text += "<span class=\"error\">pokemon have already been initiated.</span>";
             break;
 
+         // querying llm
+         case 7:
+            Terminal.text += "Querying LLM...";
+            break;
+
          // error code
          case (-1):
             Terminal.text += "<span class=\"error\">"
@@ -366,11 +371,46 @@ var Terminal = {
             break;
 
          default:
+            Terminal.text += code;
             break;
       }
-      Terminal.text += "\n\n$"
+      Terminal.text += "\n\n"
+      if (!skipPrompt) {
+         Terminal.text += "$";
+      }
       Terminal.startTyping();
-      Terminal.clearInput();
+      if (!skipPrompt) {
+         Terminal.clearInput();
+      }
+   },
+
+   /**
+    * callLLM(prompt)
+    * Sends the prompt to the Vercel serverless function proxy for OpenRouter
+    */
+   callLLM: function (prompt) {
+      // Terminal.showMessage(7, false); // "Querying LLM..."
+      fetch('https://cristianlara-github-io.vercel.app/api/openrouter-proxy', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            prompt: prompt,
+            model: 'openai/gpt-oss-120b:free'
+         })
+      })
+         .then(response => response.json())
+         .then(data => {
+            if (data.choices && data.choices[0]) {
+               Terminal.showMessage(data.choices[0].message.content);
+            } else {
+               Terminal.showMessage('\nError: ' + (data.error || 'Unknown error')); // "enter number between 1 and 3..."
+            }
+         })
+         .catch(error => {
+            Terminal.showMessage('\nError: ' + error.message);
+         });
    },
 
    downloadResume: function () {
