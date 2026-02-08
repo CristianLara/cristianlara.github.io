@@ -96,10 +96,15 @@ var Terminal = {
 
       // focus when clicking directly on console
       console.addEventListener('click', function (e) {
-         // Don't focus if clicking on a link or interactive element
-         if (!e.target.closest('a') && !e.target.closest('button')) {
+         // Don't focus if clicking on a link or the tap hint button
+         if (!e.target.closest('a') && !e.target.closest('#tap-hint')) {
             focusInput(e);
          }
+      });
+
+      // Handle tap hint button click
+      tapHint.addEventListener('click', function (e) {
+         focusInput(e);
       });
 
       // Direct tap on the input field should also hide the hint

@@ -202,9 +202,8 @@ pre {
 	cursor: text;
 }
 
-/* Tap hint for mobile users */
+/* Tap hint button for mobile users */
 #tap-hint {
-	display: block;
 	opacity: 0;
 	position: fixed;
 	bottom: 20px;
@@ -214,10 +213,17 @@ pre {
 	padding: 10px 20px;
 	border-radius: 12px;
 	font-size: 32px;
-	pointer-events: none;
+	font-family: 'Roboto Mono', monospace;
+	pointer-events: auto;
 	z-index: 1000;
 	border: 1px solid #0bc;
-	transition: opacity 0.3s ease-in-out;
+	transition: opacity 0.3s ease-in-out, box-shadow 0.2s ease, transform 0.1s ease;
+	cursor: pointer;
+	/* Remove delay on mobile */
+	touch-action: manipulation;
+	/* Remove default button styles */
+	background: transparent;
+	outline: none;
 	/* Text shimmer with background color - two layers */
 	background-image: 
 		linear-gradient(
@@ -234,6 +240,23 @@ pre {
 	background-clip: text, border-box;
 	-webkit-background-clip: text, border-box;
 	-webkit-text-fill-color: transparent;
+}
+
+/* Hover state - subtle glow enhancement */
+#tap-hint:hover {
+	box-shadow: 
+		0 0 8px rgba(0, 188, 204, 0.4),
+		0 0 20px rgba(0, 188, 204, 0.2);
+	border-color: #1dd3ea;
+}
+
+/* Active/pressed state - darker with inset shadow */
+#tap-hint:active {
+	box-shadow: 
+		inset 0 2px 4px rgba(0, 0, 0, 0.3),
+		0 0 2px rgba(0, 188, 204, 0.3);
+	transform: translateX(-50%) scale(0.98);
+	background-color: rgba(20, 45, 50, 0.95);
 }
 
 /* Show tap hint on touch devices or small screens when accepting input */
