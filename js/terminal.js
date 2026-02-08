@@ -65,6 +65,14 @@ var Terminal = {
             document.getElementById('console').classList.remove('accepting-input');
             Terminal.showMessage(3);
          });
+         $("#console").on('click', "#four", function () {
+            Terminal.clearInput();
+            const command = "pokemon";
+            for (const char of command) {
+               Terminal.processCharacter(char);
+            }
+            Terminal.processEnter()
+         });
       });
    },
 
@@ -167,10 +175,9 @@ var Terminal = {
 
       Terminal.acceptingInput = false;
       document.getElementById('console').classList.remove('accepting-input');
-      Terminal.contentOffset--;
 
       if (Terminal.input == "1") {
-         Terminal.input = "";
+         Terminal.clearInput();
          Terminal.printResume();
       }
       else if (Terminal.input == "2") {
@@ -180,7 +187,8 @@ var Terminal = {
       else if (Terminal.input == "3") {
          Terminal.showMessage(3);
       }
-      else if (Terminal.input == "pokemon") {
+      else if (Terminal.input == "pokemon" || Terminal.input == "4") {
+         Terminal.contentOffset += Terminal.input.length - 1;
          Terminal.showMessage(4);
          createAllPokemon();
       }
@@ -316,7 +324,7 @@ var Terminal = {
    },
 
    clearInput: function () {
-      Terminal.offset -= Terminal.input.length;
+      Terminal.contentOffset -= Terminal.input.length;
       Terminal.input = "";
    },
 
