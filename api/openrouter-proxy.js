@@ -1,7 +1,5 @@
 // api/openrouter-proxy.js
 
-const fetch = require('node-fetch'); // Vercel has node-fetch built-in for serverless functions
-
 module.exports = async (req, res) => {
     // Allow CORS for requests from your GitHub Pages domain
     // Replace 'https://your-github-username.github.io' with your actual GitHub Pages URL
