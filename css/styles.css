@@ -4,34 +4,51 @@ body {
    font-style: normal;
    font-weight: 300;
    color: #fff;
+   overflow-x: hidden;
+   padding: 24px;
 }
 
 #console {
    font-family: 'Roboto Mono', monospace;
    position: relative;
-   top:-30px;
    color: #fff;
-   word-wrap: normal;
+   word-wrap: break-word;
    max-width: 800px;
-   width:750px;
+   width:100%;
+   box-sizing: border-box;
    margin-left:auto;
    margin-right:auto;
    font-size:13px;
    line-height: 1.5;
+   border-radius: 16px;
+   padding: 24;
+   margin-bottom: 48px;
+   z-index: 200;
+}
+
+#console #text {
+   position: relative;
+   z-index: 201;
+   pointer-events: auto;
 }
 
 .title {
    position: relative;
    max-width: 800px;
-   width:750px;
+   height: 120px;
+   width:100%;
    margin-left:auto;
    margin-right:auto;
-   margin-top:80px;
+   margin-top:50px;
+   margin-bottom:24px;
+   padding: 24;
+   box-sizing: border-box;
 }
 
 .asciiArt {
    color: #fff;
    font-size:13px;
+   text-wrap-mode: nowrap;
 }
 
 .spriteContainer {
@@ -51,12 +68,19 @@ body {
     left: 10px;
     width: 150px;
     height: 50px;
+    text-wrap-mode: nowrap;
 
     opacity: 0;
     /* visibility: hidden; */
 
     /* -webkit-transition: opacity 2s; /* Safari */
     /* transition: opacity 2s; */
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+	#console, #tip {
+		font-size:24px;
+	}
 }
 
 #sprite {
@@ -75,7 +99,7 @@ body {
    left: -100;
    height: 52px;
    width: 58px;
-   z-index: 1;
+   z-index: 300;
 }
 
 #bulbasaur {
@@ -84,7 +108,7 @@ body {
    left: -100;
    height: 32px;
    width: 38px;
-   z-index: 1;
+   z-index: 300;
 }
 
 #squirtle {
@@ -93,7 +117,7 @@ body {
    left: -100;
    height: 30px;
    width: 30px;
-   z-index: 1;
+   z-index: 300;
 }
 
 #pidgeot {
@@ -102,7 +126,7 @@ body {
    left: -100;
    height: 62px;
    width: 62px;
-   z-index: 1;
+   z-index: 300;
 }
 
 #pikachu {
@@ -111,7 +135,7 @@ body {
    left: -100;
    height: 34px;
    width: 36px;
-   z-index: 1;
+   z-index: 300;
 }
 
 #butterfree {
@@ -120,7 +144,7 @@ body {
    left: -100;
    height: 38px;
    width: 52px;
-   z-index: 1;
+   z-index: 300;
 }
 
 a:hover {
@@ -148,6 +172,7 @@ a {  /*links*/
 .title {
    font-family: courier;
    line-height: normal;
+   z-index: 250;
 }
 
 .light {
@@ -155,5 +180,77 @@ a {  /*links*/
 }
 
 .bash {
-   color: #0bc;
+	color: #0bc;
+}
+
+pre {
+   text-wrap: wrap;
+}
+
+/* Mobile input field - hidden but functional */
+#mobile-input {
+	position: fixed;
+	opacity: 0;
+	pointer-events: auto;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 150;
+	font-size: 16px; /* Prevents zoom on iOS */
+	background: transparent;
+	cursor: text;
+}
+
+/* Tap hint for mobile users */
+#tap-hint {
+	display: none;
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: rgba(28, 58, 62, 0.9);
+	color: #0bc;
+	padding: 10px 20px;
+	border-radius: 12px;
+	font-size: 24px;
+	pointer-events: none;
+	z-index: 1000;
+	border: 1px solid #0bc;
+}
+
+/* Show tap hint on touch devices or small screens */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+	#tap-hint {
+		display: block;
+	}
+}
+
+/* Hide tap hint when mobile input is focused */
+#mobile-input:focus ~ #tap-hint,
+#tap-hint.hidden {
+	display: none;
+}
+
+/* Visual indicator when terminal is accepting input */
+#console.accepting-input {
+	box-shadow: 0 0 10px rgba(0, 188, 204, 0.3);
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+	#console.accepting-input {
+		box-shadow: none;
+	}
+}
+
+/* Animation for when user tries to interact before ready */
+@keyframes not-ready-pulse {
+	0% { box-shadow: 0 0 0 0 rgba(255, 0, 150, 0.4); }
+	70% { box-shadow: 0 0 0 10px rgba(255, 0, 150, 0); }
+	100% { box-shadow: 0 0 0 0 rgba(255, 0, 150, 0); }
+}
+
+#console.not-ready {
+   box-shadow: 0 0 10px rgba(0, 188, 204, 0.3);
+	animation: not-ready-pulse 0.6s ease-out;
 }

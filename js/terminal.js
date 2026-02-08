@@ -14,6 +14,8 @@ var Terminal = {
    acceptingInput: false, // indicating if accepting user input
    input: "",             // input text from user
    skip: false,           // controls skipping typing animation
+   isMobile: false,       // indicates if user is on a touch device
+   lastMobileInput: "",   // tracks last mobile input value for backspace detection
 
    // keycode constants
    keycode: Object.freeze({ ENTER: 13, BACKSPACE: 8, SPACE: 32 }),
@@ -21,6 +23,16 @@ var Terminal = {
    // these characters are interpreted as special actions when read
    // i.e. linebreak, pause, clear, preformatted message
    specialCharacters: ["\n", "\\", "`", "$"],
+
+   /**
+    * isValidChar(char)
+    * Check if character is alphanumeric
+    */
+   isValidChar: function (char) {
+      if (!char || char.length !== 1) return false;
+      return (char >= 0 && char <= 9) ||
+         (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
+   },
 
    /**
     * init()
@@ -38,20 +50,138 @@ var Terminal = {
 
       //add click actions for links before they're even added
       $(window).on('load', function () {
+         Terminal.setupMobileInput();
          $("#console").on('click', "#one", function () {
             Terminal.clearInput();
             Terminal.write('\n');
             Terminal.acceptingInput = false;
+            document.getElementById('console').classList.remove('accepting-input');
             Terminal.printResume();
          });
          $("#console").on('click', "#three", function () {
             Terminal.clearInput();
             Terminal.write('3');
             Terminal.acceptingInput = false;
+            document.getElementById('console').classList.remove('accepting-input');
             Terminal.showMessage(3);
          });
-         // createAllPokemon();
       });
+   },
+
+   /**
+    * setupMobileInput()
+    * Sets up hidden input field for mobile typing
+    */
+   setupMobileInput: function () {
+      var mobileInput = document.getElementById('mobile-input');
+      var tapHint = document.getElementById('tap-hint');
+      var console = document.getElementById('console');
+
+      // Focus hidden input when terminal area is tapped
+      var focusInput = function (e) {
+         if (Terminal.acceptingInput) {
+            mobileInput.focus();
+            if (tapHint) tapHint.classList.add('hidden');
+            window.scrollBy({ top: 5000, behavior: "smooth" });
+         } else {
+            // Show visual feedback that terminal is not ready
+            console.classList.remove('not-ready');
+            void console.offsetWidth; // Trigger reflow to restart animation
+            console.classList.add('not-ready');
+            setTimeout(function () {
+               console.classList.remove('not-ready');
+            }, 600);
+         }
+      };
+
+      // focus when clicking directly on console
+      console.addEventListener('click', function (e) {
+         // Don't focus if clicking on a link or interactive element
+         if (!e.target.closest('a') && !e.target.closest('button')) {
+            focusInput(e);
+         }
+      });
+
+      // Direct tap on the input field should also hide the hint
+      mobileInput.addEventListener('focus', function () {
+         if (tapHint) tapHint.classList.add('hidden');
+         window.scrollBy({ top: 5000, behavior: "smooth" });
+      });
+      // Show hint again when input loses focus
+      mobileInput.addEventListener('blur', function () {
+         if (tapHint && Terminal.acceptingInput) {
+            tapHint.classList.remove('hidden');
+         }
+      });
+   },
+
+   /**
+    * isTypingOnMobile()
+    * Check if we're currently typing on mobile
+    */
+   isTypingOnMobile: function () {
+      var mobileInput = document.getElementById('mobile-input');
+      return mobileInput && mobileInput === document.activeElement;
+   },
+
+   /**
+    * processCharacter(char)
+    * Process a single character input (extracted for reuse)
+    */
+   processCharacter: function (char) {
+      if (!Terminal.acceptingInput) return;
+
+      Terminal.removeCursor();
+      Terminal.write(char);
+      Terminal.input += char;
+      Terminal.contentOffset++;
+   },
+
+   /**
+    * processBackspace()
+    * Handle backspace (extracted for reuse)
+    */
+   processBackspace: function () {
+      if (!Terminal.acceptingInput) return;
+
+      if (Terminal.input.length > 0) {
+         Terminal.removeCursor();
+         Terminal.removeLastCharacter();
+         Terminal.contentOffset--;
+         var length = Terminal.input.length;
+         Terminal.input = Terminal.input.substring(0, length - 1);
+      }
+   },
+
+   /**
+    * processEnter()
+    * Handle enter key/command submission (extracted for reuse)
+    */
+   processEnter: function () {
+      if (!Terminal.acceptingInput) return;
+
+      Terminal.acceptingInput = false;
+      document.getElementById('console').classList.remove('accepting-input');
+      Terminal.contentOffset--;
+
+      if (Terminal.input == "1") {
+         Terminal.input = "";
+         Terminal.printResume();
+      }
+      else if (Terminal.input == "2") {
+         Terminal.showMessage(2);
+         Terminal.downloadResume();
+      }
+      else if (Terminal.input == "3") {
+         Terminal.showMessage(3);
+      }
+      else if (Terminal.input == "pokemon") {
+         Terminal.showMessage(4);
+         createAllPokemon();
+      }
+      else {
+         Terminal.showMessage(-1);
+      }
    },
 
    /**
@@ -143,58 +273,38 @@ var Terminal = {
       // keyboard listener for terminal input
       document.addEventListener("keydown", function (event) {
          if (Terminal.acceptingInput) {
-            character = String.fromCharCode(event.which).toLowerCase();
-
             // User hit enter
             if (event.which == Terminal.keycode.ENTER) {
                event.preventDefault();
-               Terminal.acceptingInput = false;
-               Terminal.contentOffset--;
-               if (Terminal.input == "1") {
-                  Terminal.input = "";
-                  Terminal.printResume();
-               }
-               else if (Terminal.input == "2") {
-                  Terminal.showMessage(2);
-                  Terminal.downloadResume();
-               }
-               else if (Terminal.input == "3") {
-                  Terminal.showMessage(3);
-               }
-               else if (Terminal.input == "pokemon") {
-                  Terminal.showMessage(4);
-                  createAllPokemon();
-               }
-               else {
-                  Terminal.showMessage(-1);
-               }
+               Terminal.processEnter();
             }
 
             // User hit backspace
             else if (event.which == Terminal.keycode.BACKSPACE) {
                event.preventDefault();
-               if (Terminal.input.length > 0) {
-                  Terminal.removeCursor();
-                  Terminal.removeLastCharacter();
-                  Terminal.contentOffset--;
-                  length = Terminal.input.length;
-                  Terminal.input = Terminal.input.substring(0, length - 1);
-               }
+               Terminal.processBackspace();
             }
 
-            // User hit an alpha-numeric key
-            else if ((character >= 0 && character <= 9) ||
-               (character >= 'a' && character <= 'z')) {
-               Terminal.removeCursor();
-               Terminal.write(character);
-               Terminal.input += character;
-               Terminal.contentOffset++;
+            // User hit a printable character key
+            else {
+               var character = String.fromCharCode(event.which);
+               if (Terminal.isValidChar(character)) {
+                  Terminal.processCharacter(character.toLowerCase());
+               }
             }
          }
-         // skip animation
          else {
             if (event.which == Terminal.keycode.SPACE) {
+               // skip animation
                Terminal.skip = true;
+            } else {
+               // Show visual feedback that terminal is not ready
+               document.getElementById('console').classList.remove('not-ready');
+               void document.getElementById('console').offsetWidth; // Trigger reflow to restart animation
+               document.getElementById('console').classList.add('not-ready');
+               setTimeout(function () {
+                  document.getElementById('console').classList.remove('not-ready');
+               }, 600);
             }
          }
       });
@@ -266,7 +376,11 @@ var Terminal = {
             "<span class=\"c\">$</span> ";
          Terminal.insert(prompt);
          Terminal.contentOffset += prompt.length - "~".length;
-         if (Terminal.index > 3) Terminal.acceptingInput = true;
+         if (Terminal.index > 3) {
+            Terminal.acceptingInput = true;
+            // Add visual indicator that terminal is ready for input
+            document.getElementById('console').classList.add('accepting-input');
+         }
       }
       else if (char.includes("`")) {
          Terminal.contentOffset -= "`".length;
@@ -335,7 +449,7 @@ var Terminal = {
          Terminal.insert(Terminal.pending);
       }
 
-      window.scrollBy(0, 50); // scroll to make sure bottom is always visible
+      window.scrollBy(0, 5000); // scroll to make sure bottom is always visible
 
    },
 

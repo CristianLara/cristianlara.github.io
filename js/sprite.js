@@ -132,7 +132,7 @@ var Sprite = {
          widthFill += '-'
       }
       $("#tip").html(
-         `+-${widthFill}-+
+`+-${widthFill}-+
 | ${content} |
 +-${widthFill}-+`
       );
