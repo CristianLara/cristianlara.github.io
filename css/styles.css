@@ -204,32 +204,115 @@ pre {
 
 /* Tap hint for mobile users */
 #tap-hint {
-	display: none;
+	display: block;
+	opacity: 0;
 	position: fixed;
 	bottom: 20px;
 	left: 50%;
 	transform: translateX(-50%);
-	background-color: rgba(28, 58, 62, 0.9);
 	color: #0bc;
 	padding: 10px 20px;
 	border-radius: 12px;
-	font-size: 24px;
+	font-size: 32px;
 	pointer-events: none;
 	z-index: 1000;
 	border: 1px solid #0bc;
+	transition: opacity 0.3s ease-in-out;
+	/* Text shimmer with background color - two layers */
+	background-image: 
+		linear-gradient(
+			90deg,
+			#0bc 0%,
+			#0bc 40%,
+			#ffffff 50%,
+			#0bc 60%,
+			#0bc 100%
+		),
+		linear-gradient(rgba(28, 58, 62, 0.9), rgba(28, 58, 62, 0.9));
+	background-size: 250% 100%, 100% 100%;
+	background-position: 100% 0, 0 0;
+	background-clip: text, border-box;
+	-webkit-background-clip: text, border-box;
+	-webkit-text-fill-color: transparent;
 }
 
-/* Show tap hint on touch devices or small screens */
+/* Show tap hint on touch devices or small screens when accepting input */
 @media (hover: none) and (pointer: coarse), (max-width: 768px) {
-	#tap-hint {
-		display: block;
+	#console.accepting-input ~ #tap-hint {
+		opacity: 1;
 	}
 }
 
-/* Hide tap hint when mobile input is focused */
+/* Hide tap hint when console is not accepting input (instant) */
+#console:not(.accepting-input) ~ #tap-hint {
+	opacity: 0;
+	transition: none;
+}
+
+/* Hide tap hint when mobile input is focused (instant) */
 #mobile-input:focus ~ #tap-hint,
 #tap-hint.hidden {
-	display: none;
+	opacity: 0;
+	transition: none;
+}
+
+/* Combined text shimmer and border glow animation for tap hint */
+@keyframes tap-hint-glimmer {
+	/* Organic, flowy glow with shifting positions and asymmetric layers */
+	0% {
+		background-position: 100% 0, 0 0;
+		box-shadow: 
+			/* Layer 1: Bottom-right, soft, slow breathing */
+			4px 4px 8px rgba(0, 140, 160, 0.2),
+			/* Layer 2: Top-left, sharper, medium pulse */
+			-3px -2px 6px rgba(80, 210, 230, 0.15),
+			/* Layer 3: Center, subtle base glow */
+			0 0 4px rgba(0, 188, 204, 0.3);
+	}
+	25% {
+		background-position: 50% 0, 0 0;
+		box-shadow: 
+			/* Layer 1 shifts up-left, intensifies */
+			2px 2px 12px rgba(0, 140, 160, 0.35),
+			/* Layer 2 shifts right, softens */
+			-1px -1px 10px rgba(80, 210, 230, 0.25),
+			/* Layer 3 expands */
+			0 0 8px rgba(0, 188, 204, 0.4);
+	}
+	50% {
+		background-position: 0% 0, 0 0;
+		box-shadow: 
+			/* Layer 1 shifts to top-right */
+			3px -3px 10px rgba(0, 140, 160, 0.25),
+			/* Layer 2 shifts down-left, peaks */
+			-4px 2px 14px rgba(80, 210, 230, 0.3),
+			/* Layer 3 contracts */
+			0 0 5px rgba(0, 188, 204, 0.35);
+	}
+	75% {
+		background-position: 50% 0, 0 0;
+		box-shadow: 
+			/* Layer 1 returns toward center */
+			1px 1px 14px rgba(0, 140, 160, 0.4),
+			/* Layer 2 moves to bottom-right */
+			2px 3px 8px rgba(80, 210, 230, 0.2),
+			/* Layer 3 pulses again */
+			0 0 10px rgba(0, 188, 204, 0.45);
+	}
+	100% {
+		background-position: 100% 0, 0 0;
+		box-shadow: 
+			4px 4px 8px rgba(0, 140, 160, 0.2),
+			-3px -2px 6px rgba(80, 210, 230, 0.15),
+			0 0 4px rgba(0, 188, 204, 0.3);
+	}
+}
+
+/* Show tap hint on mobile devices with glimmer animation */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+	#console.accepting-input ~ #tap-hint {
+		animation: tap-hint-glimmer 6s linear infinite;
+	}
 }
 
 /* Visual indicator when terminal is accepting input */
