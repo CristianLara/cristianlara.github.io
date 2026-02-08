@@ -6,7 +6,8 @@ module.exports = async (req, res) => {
     // Allow CORS for requests from your GitHub Pages domain
     // Replace 'https://your-github-username.github.io' with your actual GitHub Pages URL
     // Or use '*' for development, but specify your domain for production.
-    res.setHeader('Access-Control-Allow-Origin', 'https://cristianlara.me');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // res.setHeader('Access-Control-Allow-Origin', 'https://cristianlara.me');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
