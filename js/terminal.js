@@ -16,6 +16,7 @@ var Terminal = {
    skip: false,           // controls skipping typing animation
    isMobile: false,       // indicates if user is on a touch device
    lastMobileInput: "",   // tracks last mobile input value for backspace detection
+   pokemonInitiated: false, // tracks if pokemon command has been run
 
    // keycode constants
    keycode: Object.freeze({ ENTER: 13, BACKSPACE: 8, SPACE: 32 }),
@@ -188,8 +189,13 @@ var Terminal = {
          Terminal.showMessage(3);
       }
       else if (Terminal.input == "pokemon" || Terminal.input == "4") {
-         Terminal.showMessage(4);
-         createAllPokemon();
+         if (Terminal.pokemonInitiated) {
+            Terminal.showMessage(5);
+         } else {
+            Terminal.showMessage(4);
+            createAllPokemon();
+            Terminal.pokemonInitiated = true;
+         }
       }
       else {
          Terminal.showMessage(-1);
@@ -344,6 +350,11 @@ var Terminal = {
          // pokemon
          case 4:
             Terminal.text += "initiating pokemon...";
+            break;
+
+         // pokemon already initiated
+         case 5:
+            Terminal.text += "<span class=\"error\">pokemon have already been initiated.</span>";
             break;
 
          // error code
