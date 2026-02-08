@@ -81,6 +81,16 @@ body {
 	#console, #tip {
 		font-size:24px;
 	}
+   .asciiArt {
+		font-size:18px;
+	}
+	.spriteContainer {
+		left:640;
+	}
+   #tip {
+      left: -120px;
+      top: -90px;
+   }
 }
 
 #sprite {
