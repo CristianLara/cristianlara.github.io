@@ -40,21 +40,6 @@ var Terminal = {
    },
 
    /**
-    * escapeHtml(text)
-    * Escapes HTML entities to prevent injection in terminal output
-    */
-   escapeHtml: function (text) {
-      var map = {
-         '&': '&amp;',
-         '<': '&lt;',
-         '>': '&gt;',
-         '"': '&quot;',
-         "'": '&#039;'
-      };
-      return text.replace(/[&<>"']/g, function (m) { return map[m]; });
-   },
-
-   /**
     * init()
     * Starts cursor blinking, reads textfile and stores in Terminal.text
     * Adds click events to action links
@@ -447,10 +432,9 @@ var Terminal = {
             Terminal.acceptingInput = true;
             document.getElementById('console').classList.add('accepting-input');
             if (data.choices && data.choices[0]) {
-               var escapedContent = Terminal.escapeHtml(data.choices[0].message.content);
-               Terminal.showMessage(escapedContent);
+               Terminal.showMessage(data.choices[0].message.content);
             } else {
-               Terminal.showMessage('\nError: ' + Terminal.escapeHtml(data.error || 'Unknown error'));
+               Terminal.showMessage('\nError: ' + (data.error || 'Unknown error'));
             }
          })
          .catch(error => {
@@ -458,7 +442,7 @@ var Terminal = {
             Terminal.updateBlinkInterval(500); // normal blink for cursor
             Terminal.acceptingInput = true;
             document.getElementById('console').classList.add('accepting-input');
-            Terminal.showMessage('\nError: ' + Terminal.escapeHtml(error.message));
+            Terminal.showMessage('\nError: ' + error.message);
          });
    },
 
@@ -482,8 +466,7 @@ var Terminal = {
          Terminal.updateBlinkInterval(500); // normal blink for cursor
          Terminal.acceptingInput = true;
          document.getElementById('console').classList.add('accepting-input');
-         var escapedContent = Terminal.escapeHtml(fakeResponse.choices[0].message.content);
-         Terminal.showMessage(escapedContent);
+         Terminal.showMessage(fakeResponse.choices[0].message.content);
       }, mockDelay);
    },
 
