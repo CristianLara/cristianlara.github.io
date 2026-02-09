@@ -410,7 +410,7 @@ var Terminal = {
       Terminal.acceptingInput = false;
       document.getElementById('console').classList.remove('accepting-input');
 
-      const mockMode = true; // Set to false for real API calls
+      const mockMode = false; // Set to false for real API calls
       if (mockMode) {
          return Terminal.mockLLMCall(prompt);
       }
