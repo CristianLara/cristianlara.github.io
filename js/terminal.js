@@ -17,6 +17,11 @@ var Terminal = {
    isMobile: false,       // indicates if user is on a touch device
    lastMobileInput: "",   // tracks last mobile input value for backspace detection
    pokemonInitiated: false, // tracks if pokemon command has been run
+   loading: false,
+   spinnerChars: ['|', '/', '-', '\\'],
+   spinnerIndex: 0,
+   blinkInterval: 500,    // blink interval in milliseconds
+   blinkIntervalId: null, // ID of the blink interval
 
    // keycode constants
    keycode: Object.freeze({ ENTER: 13, BACKSPACE: 8, SPACE: 32 }),
@@ -40,7 +45,7 @@ var Terminal = {
     * Adds click events to action links
     */
    init: function () {
-      setInterval(function () { Terminal.blink(); }, 500); // start cursor blink
+      Terminal.updateBlinkInterval(500); // start cursor blink
 
       $.get(Terminal.file, function (data) {
          Terminal.text = data; // save the textfile in Terminal.text
@@ -73,6 +78,18 @@ var Terminal = {
             Terminal.processEnter()
          });
       });
+   },
+
+   /**
+    * updateBlinkInterval(interval)
+    * Updates the blink interval for cursor/spinner animation
+    */
+   updateBlinkInterval: function (interval) {
+      if (Terminal.blinkIntervalId) {
+         clearInterval(Terminal.blinkIntervalId);
+      }
+      Terminal.blinkInterval = interval;
+      Terminal.blinkIntervalId = setInterval(function () { Terminal.blink(); }, Terminal.blinkInterval);
    },
 
    /**
@@ -388,7 +405,16 @@ var Terminal = {
     * Sends the prompt to the Vercel serverless function proxy for OpenRouter
     */
    callLLM: function (prompt) {
-      // Terminal.showMessage(7, false); // "Querying LLM..."
+      Terminal.loading = true;
+      Terminal.updateBlinkInterval(200); // faster blink for spinner
+      Terminal.acceptingInput = false;
+      document.getElementById('console').classList.remove('accepting-input');
+
+      const mockMode = true; // Set to false for real API calls
+      if (mockMode) {
+         return Terminal.mockLLMCall(prompt);
+      }
+
       fetch('https://testing.cristianlara.me/api/openrouter-proxy', {
          method: 'POST',
          headers: {
@@ -401,15 +427,47 @@ var Terminal = {
       })
          .then(response => response.json())
          .then(data => {
+            Terminal.loading = false;
+            Terminal.updateBlinkInterval(500); // normal blink for cursor
+            Terminal.acceptingInput = true;
+            document.getElementById('console').classList.add('accepting-input');
             if (data.choices && data.choices[0]) {
                Terminal.showMessage(data.choices[0].message.content);
             } else {
-               Terminal.showMessage('\nError: ' + (data.error || 'Unknown error')); // "enter number between 1 and 3..."
+               Terminal.showMessage('\nError: ' + (data.error || 'Unknown error'));
             }
          })
          .catch(error => {
+            Terminal.loading = false;
+            Terminal.updateBlinkInterval(500); // normal blink for cursor
+            Terminal.acceptingInput = true;
+            document.getElementById('console').classList.add('accepting-input');
             Terminal.showMessage('\nError: ' + error.message);
          });
+   },
+
+   /**
+    * mockLLMCall(prompt)
+    * Simulates an LLM API call for testing purposes
+    */
+   mockLLMCall: function (prompt) {
+      const mockDelay = 2000; // Simulate 2-second delay
+      const fakeResponse = {
+         choices: [{
+            message: {
+               content: "This is a mocked LLM response for testing. Hello, world!"
+            }
+         }]
+      };
+
+      // Mocked version: Use setTimeout to simulate delay and fake response
+      setTimeout(() => {
+         Terminal.loading = false;
+         Terminal.updateBlinkInterval(500); // normal blink for cursor
+         Terminal.acceptingInput = true;
+         document.getElementById('console').classList.add('accepting-input');
+         Terminal.showMessage(fakeResponse.choices[0].message.content);
+      }, mockDelay);
    },
 
    downloadResume: function () {
@@ -553,14 +611,19 @@ var Terminal = {
 
    /**
     * blink()
-    * blink the cursor by removing and reading it
+    * blink the cursor by removing and reading it, or animate spinner if loading
     */
    blink: function () {
-      var content = Terminal.content();
-      if (Terminal.cursorIsOn())
-         $("#cursor").html("");
-      else
-         $("#cursor").html("|");
+      if (Terminal.loading) {
+         $("#cursor").html(Terminal.spinnerChars[Terminal.spinnerIndex]);
+         Terminal.spinnerIndex = (Terminal.spinnerIndex + 1) % Terminal.spinnerChars.length;
+      } else {
+         var content = Terminal.content();
+         if (Terminal.cursorIsOn())
+            $("#cursor").html("");
+         else
+            $("#cursor").html("|");
+      }
    }
 }
 
