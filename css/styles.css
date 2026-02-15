@@ -359,7 +359,7 @@ pre {
 
 /* Visual indicator when terminal is accepting input */
 #console.accepting-input {
-	box-shadow: 0 0 10px rgba(0, 188, 204, 0.3);
+	/* box-shadow: 0 0 10px rgba(0, 188, 204, 0.3); */
 }
 
 @media (hover: none) and (pointer: coarse), (max-width: 768px) {
