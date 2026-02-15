@@ -406,16 +406,11 @@ var Terminal = {
     */
    callLLM: function (prompt) {
       Terminal.loading = true;
-      Terminal.updateBlinkInterval(200); // faster blink for spinner
+      Terminal.updateBlinkInterval(100); // faster blink for spinner
       Terminal.acceptingInput = false;
       document.getElementById('console').classList.remove('accepting-input');
 
-      const mockMode = false; // Set to false for real API calls
-      if (mockMode) {
-         return Terminal.mockLLMCall(prompt);
-      }
-
-      fetch('https://testing.cristianlara.me/api/openrouter-proxy', {
+      fetch('/api/openrouter-proxy', {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json'
@@ -444,30 +439,6 @@ var Terminal = {
             document.getElementById('console').classList.add('accepting-input');
             Terminal.showMessage('\nError: ' + error.message);
          });
-   },
-
-   /**
-    * mockLLMCall(prompt)
-    * Simulates an LLM API call for testing purposes
-    */
-   mockLLMCall: function (prompt) {
-      const mockDelay = 2000; // Simulate 2-second delay
-      const fakeResponse = {
-         choices: [{
-            message: {
-               content: "This is a mocked LLM response for testing. Hello, world!"
-            }
-         }]
-      };
-
-      // Mocked version: Use setTimeout to simulate delay and fake response
-      setTimeout(() => {
-         Terminal.loading = false;
-         Terminal.updateBlinkInterval(500); // normal blink for cursor
-         Terminal.acceptingInput = true;
-         document.getElementById('console').classList.add('accepting-input');
-         Terminal.showMessage(fakeResponse.choices[0].message.content);
-      }, mockDelay);
    },
 
    downloadResume: function () {
