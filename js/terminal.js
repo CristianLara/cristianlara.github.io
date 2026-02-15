@@ -341,7 +341,7 @@ var Terminal = {
             Terminal.text += "downloading resume...";
             break;
 
-         // contact me
+         // contact info
          case 3:
             Terminal.text +=
                "Email: <a class=\"c\" href=\"mailto:cristianlara@alumni.stanford.edu\">cristianlara@alumni.stanford.edu</a><br>"
