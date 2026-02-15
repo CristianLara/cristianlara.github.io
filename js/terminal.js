@@ -422,10 +422,6 @@ var Terminal = {
       })
          .then(response => response.json())
          .then(data => {
-            Terminal.loading = false;
-            Terminal.updateBlinkInterval(500); // normal blink for cursor
-            Terminal.acceptingInput = true;
-            document.getElementById('console').classList.add('accepting-input');
             if (data.choices && data.choices[0]) {
                Terminal.showMessage(data.choices[0].message.content);
             } else {
@@ -433,11 +429,13 @@ var Terminal = {
             }
          })
          .catch(error => {
-            Terminal.loading = false;
+            Terminal.showMessage('\nError: ' + error.message);
+         })
+         .finally(() => {
             Terminal.updateBlinkInterval(500); // normal blink for cursor
+            Terminal.loading = false;
             Terminal.acceptingInput = true;
             document.getElementById('console').classList.add('accepting-input');
-            Terminal.showMessage('\nError: ' + error.message);
          });
    },
 
