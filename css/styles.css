@@ -423,3 +423,11 @@ pre {
 @media (prefers-reduced-motion: reduce) {
 	.retro-cursor, .retro-trail-pixel { animation: none !important; transition: none !important; }
 }
+
+/* Hide native cursor on desktop to let the retro cursor take over.
+   Keep native cursor for interactive elements to preserve affordance. */
+@media (hover: hover) and (pointer: fine) {
+	html, body { cursor: none; }
+	/* allow expected cursors on interactive elements */
+	a, button, input, textarea, select, #sprite { cursor: auto; }
+}
