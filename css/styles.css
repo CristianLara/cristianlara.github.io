@@ -390,6 +390,25 @@ pre {
 	pointer-events: none;
 	z-index: 9999;
 }
+
+/* When hidden we set opacity to 0 but keep elements in the render tree
+   so CSS/JS animations on children continue to run until they finish. */
+.retro-cursor-root.hidden {
+	/* keep the root in the render tree so child animations continue,
+	   but visually hide the main sprite while allowing trail pixels
+	   to keep animating and fading out. */
+	pointer-events: none;
+}
+
+.retro-cursor-root.hidden .retro-cursor {
+	opacity: 0;
+	transition: opacity 120ms linear;
+}
+
+.retro-cursor-root.hidden .retro-trail-pixel {
+	/* keep trail pixels visible so they can finish their animations */
+	opacity: 1;
+}
 .retro-cursor {
 	position: absolute;
 	width: 12px;

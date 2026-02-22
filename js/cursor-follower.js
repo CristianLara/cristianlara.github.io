@@ -71,8 +71,9 @@
     function setPointerState(over) {
       if (over === pointerOverInteractive) return;
       pointerOverInteractive = over;
-      // hide/show the JS sprite root
-      root.style.display = over ? 'none' : '';
+      // hide/show the JS sprite root by toggling the hidden class so
+      // child trail animations remain in the render tree and can finish
+      if (over) root.classList.add('hidden'); else root.classList.remove('hidden');
     }
 
     function onMove(e) {
@@ -83,7 +84,8 @@
       // hide sprite when over interactive elements (CSS pointer shown)
       setPointerState(isInteractiveElement(e.target));
       const now = Date.now();
-      if (now - lastSpawn > 30 && !pointerOverInteractive) {
+      if (now - lastSpawn > 30) {
+        // Always spawn trail pixels so animations finish even when hovering interactive elements
         spawnTrail(root, x, y, getComputedStyle(document.documentElement).getPropertyValue('--retro-color') || '#0bc');
         lastSpawn = now;
       }
@@ -102,14 +104,14 @@
     function onWindowMouseOut(e) {
       if (!e.relatedTarget) {
         pointerOutside = true;
-        root.style.display = 'none';
+        root.classList.add('hidden');
       }
     }
 
     function onWindowMouseIn(/*e*/) {
       // show again when we get input back; actual position will be set on next mousemove
       pointerOutside = false;
-      if (!pointerOverInteractive) root.style.display = '';
+      root.classList.remove('hidden');
     }
 
     // Ensure reappearance when the pointer re-enters anywhere: listen for pointermove
@@ -119,8 +121,8 @@
       // the target is interactive (in which case CSS pointer will show instead).
       if (pointerOutside) {
         pointerOutside = false;
-        setPointerState(isInteractiveElement(e.target));
-        if (!pointerOverInteractive) root.style.display = '';
+        // ensure we show again on re-entry
+        root.classList.remove('hidden');
       }
     }
 
@@ -128,9 +130,9 @@
     window.addEventListener('mouseenter', onWindowMouseIn, { passive: true });
     window.addEventListener('pointermove', onAnyPointerMove, { passive: true });
     window.addEventListener('mouseover', onAnyPointerMove, { passive: true });
-    window.addEventListener('blur', () => { pointerOutside = true; root.style.display = 'none'; }, { passive: true });
+    window.addEventListener('blur', () => { pointerOutside = true; root.classList.add('hidden'); }, { passive: true });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { pointerOutside = true; root.style.display = 'none'; }
+      if (document.hidden) { pointerOutside = true; root.classList.add('hidden'); }
     });
 
     // Keep root sized for absolute positioning
