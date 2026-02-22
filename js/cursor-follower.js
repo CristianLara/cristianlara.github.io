@@ -95,23 +95,42 @@
 
     window.addEventListener('mousemove', onMove, { passive: true });
 
+    // Track whether pointer is outside the window
+    let pointerOutside = false;
+
     // Hide the JS sprite when the pointer leaves the document (relatedTarget==null)
     function onWindowMouseOut(e) {
       if (!e.relatedTarget) {
+        pointerOutside = true;
         root.style.display = 'none';
       }
     }
 
     function onWindowMouseIn(/*e*/) {
       // show again when we get input back; actual position will be set on next mousemove
+      pointerOutside = false;
       if (!pointerOverInteractive) root.style.display = '';
+    }
+
+    // Ensure reappearance when the pointer re-enters anywhere: listen for pointermove
+    // and mouseover as some browsers emit different events on re-entry.
+    function onAnyPointerMove(e) {
+      // If pointer was outside, treat this as re-entry and show the sprite unless
+      // the target is interactive (in which case CSS pointer will show instead).
+      if (pointerOutside) {
+        pointerOutside = false;
+        setPointerState(isInteractiveElement(e.target));
+        if (!pointerOverInteractive) root.style.display = '';
+      }
     }
 
     window.addEventListener('mouseout', onWindowMouseOut, { passive: true });
     window.addEventListener('mouseenter', onWindowMouseIn, { passive: true });
-    window.addEventListener('blur', () => { root.style.display = 'none'; }, { passive: true });
+    window.addEventListener('pointermove', onAnyPointerMove, { passive: true });
+    window.addEventListener('mouseover', onAnyPointerMove, { passive: true });
+    window.addEventListener('blur', () => { pointerOutside = true; root.style.display = 'none'; }, { passive: true });
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) root.style.display = 'none';
+      if (document.hidden) { pointerOutside = true; root.style.display = 'none'; }
     });
 
     // Keep root sized for absolute positioning
