@@ -427,13 +427,11 @@ pre {
 /* Hide native cursor on desktop to let the retro cursor take over.
    Keep native cursor for interactive elements to preserve affordance. */
 @media (hover: hover) and (pointer: fine) {
-	/* Use a custom pixelated SVG cursor for all desktop elements.
-	   The data URI uses an inline SVG; color follows --retro-color. */
-	--retro-cursor-svg: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g shape-rendering='crispEdges'><rect width='24' height='24' fill='none'/><path d='M1 1 L17 12 L10 13 L12 19 L6 14 L1 24 Z' fill='%230bc'/></g></svg>") 0 0, auto;
+	 /* Force-hide the native system cursor on desktop and rely on the
+		 JS-driven `.retro-cursor` DOM sprite as the visible pointer.
+		 This avoids browser inconsistencies with data-URI cursors. */
+	 html, body, * { cursor: none !important; }
 
-	/* Apply everywhere so the native arrow is never visible on desktop */
-	* { cursor: var(--retro-cursor-svg) !important; }
-
-	/* If you still want pointer affordance on interactive elements, you
-	   can override with another cursor rule (e.g., pointer) per-element. */
+	 /* If you later want to supply a custom cursor image fallback
+		 (PNG/SVG), we can replace `cursor: none` with `cursor: url(...), auto` */
 }
