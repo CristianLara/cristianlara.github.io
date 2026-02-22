@@ -435,3 +435,16 @@ pre {
 	 /* If you later want to supply a custom cursor image fallback
 		 (PNG/SVG), we can replace `cursor: none` with `cursor: url(...), auto` */
 }
+
+/* Custom pointer affordance for interactive elements (desktop only) */
+@media (hover: hover) and (pointer: fine) {
+	/* Small pixel-style SVG pointer (teal) with hotspot near top-left; fallback to pointer */
+	a, button, #sprite {
+		cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g shape-rendering='crispEdges'><rect width='24' height='24' fill='none'/><path d='M1 1 L16 12 L11 13 L13 19 L8 14 L1 24 Z' fill='%230bc'/></g></svg>") 4 4, pointer !important;
+	}
+
+	/* Keep text cursor for text inputs */
+	input, textarea, select, #mobile-input {
+		cursor: text !important;
+	}
+}
