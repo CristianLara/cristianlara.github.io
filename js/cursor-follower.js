@@ -59,13 +59,31 @@
       requestAnimationFrame(update);
     }
 
+    // Track whether pointer is over an interactive element so we can hide
+    // the JS sprite when the CSS pointer cursor is shown.
+    let pointerOverInteractive = false;
+
+    function isInteractiveElement(el) {
+      if (!el) return false;
+      return !!el.closest && !!el.closest('a, button, [role="button"], #sprite');
+    }
+
+    function setPointerState(over) {
+      if (over === pointerOverInteractive) return;
+      pointerOverInteractive = over;
+      // hide/show the JS sprite root
+      root.style.display = over ? 'none' : '';
+    }
+
     function onMove(e) {
       const x = e.clientX;
       const y = e.clientY;
       mouseX = x;
       mouseY = y;
+      // hide sprite when over interactive elements (CSS pointer shown)
+      setPointerState(isInteractiveElement(e.target));
       const now = Date.now();
-      if (now - lastSpawn > 30) {
+      if (now - lastSpawn > 30 && !pointerOverInteractive) {
         spawnTrail(root, x, y, getComputedStyle(document.documentElement).getPropertyValue('--retro-color') || '#0bc');
         lastSpawn = now;
       }
@@ -76,6 +94,25 @@
     }
 
     window.addEventListener('mousemove', onMove, { passive: true });
+
+    // Hide the JS sprite when the pointer leaves the document (relatedTarget==null)
+    function onWindowMouseOut(e) {
+      if (!e.relatedTarget) {
+        root.style.display = 'none';
+      }
+    }
+
+    function onWindowMouseIn(/*e*/) {
+      // show again when we get input back; actual position will be set on next mousemove
+      if (!pointerOverInteractive) root.style.display = '';
+    }
+
+    window.addEventListener('mouseout', onWindowMouseOut, { passive: true });
+    window.addEventListener('mouseenter', onWindowMouseIn, { passive: true });
+    window.addEventListener('blur', () => { root.style.display = 'none'; }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) root.style.display = 'none';
+    });
 
     // Keep root sized for absolute positioning
     root.style.width = '100%';
