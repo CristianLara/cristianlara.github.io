@@ -379,3 +379,47 @@ pre {
    box-shadow: 0 0 10px rgba(0, 188, 204, 0.3);
 	animation: not-ready-pulse 0.6s ease-out;
 }
+
+/* Retro cursor styles (mouse-following, desktop only) */
+:root {
+	--retro-color: #0bc;
+}
+.retro-cursor-root {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+}
+.retro-cursor {
+	position: absolute;
+	width: 12px;
+	height: 18px;
+	background: var(--retro-color);
+	image-rendering: pixelated;
+	transform: translate(-50%, -50%);
+	border-radius: 2px;
+	box-shadow: 0 0 8px rgba(11, 204, 204, 0.45);
+	will-change: transform, opacity;
+}
+.retro-trail-pixel {
+	position: absolute;
+	width: 4px;
+	height: 4px;
+	background: var(--retro-color);
+	border-radius: 1px;
+	transform: translate(-50%, -50%);
+	animation: retro-trail 600ms linear forwards;
+	mix-blend-mode: screen;
+}
+@keyframes retro-trail {
+	from { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+	to   { opacity: 0; transform: translate(-50%, -50%) translateY(-10px) scale(0.5); }
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+	.retro-cursor-root { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.retro-cursor, .retro-trail-pixel { animation: none !important; transition: none !important; }
+}
