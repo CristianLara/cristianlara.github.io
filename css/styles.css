@@ -391,25 +391,15 @@ pre {
 	z-index: 9999;
 }
 
-/* When hidden we set opacity to 0 but keep elements in the render tree
-   so CSS/JS animations on children continue to run until they finish. */
-.retro-cursor-root.hidden {
-	/* keep the root in the render tree so child animations continue,
-	   but visually hide the main sprite while allowing trail pixels
-	   to keep animating and fading out. */
-	pointer-events: none;
-}
-
 .retro-cursor-root.hidden .retro-cursor {
+	/* When hidden we set opacity to 0 but keep elements in the render tree
+	   so CSS/JS animations on children continue to run until they finish. */
 	opacity: 0;
 	transition: opacity 120ms linear;
 }
 
-.retro-cursor-root.hidden .retro-trail-pixel {
-	/* keep trail pixels visible so they can finish their animations */
-	opacity: 1;
-}
 .retro-cursor {
+	opacity: 0.8;
 	position: absolute;
 	width: 12px;
 	height: 18px;
@@ -449,16 +439,11 @@ pre {
 	 /* Force-hide the native system cursor on desktop and rely on the
 		 JS-driven `.retro-cursor` DOM sprite as the visible pointer.
 		 This avoids browser inconsistencies with data-URI cursors. */
-	 html, body, * { cursor: none !important; }
+	html, body, * { cursor: none !important; }
+	a, #sprite {
+		cursor: auto !important;
+	}
 
 	 /* If you later want to supply a custom cursor image fallback
 		 (PNG/SVG), we can replace `cursor: none` with `cursor: url(...), auto` */
-}
-
-/* Custom pointer affordance for interactive elements (desktop only) */
-@media (hover: hover) and (pointer: fine) {
-	/* Small pixel-style SVG pointer (teal) with hotspot near top-left; fallback to pointer */
-	a, button, #sprite {
-		cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g shape-rendering='crispEdges'><rect width='24' height='24' fill='none'/><path d='M1 1 L16 12 L11 13 L13 19 L8 14 L1 24 Z' fill='%230bc'/></g></svg>") 4 4, pointer !important;
-	}
 }

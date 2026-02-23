@@ -13,7 +13,7 @@
 
   function createRoot() {
     const root = document.createElement('div');
-    root.className = 'retro-cursor-root';
+    root.className = 'retro-cursor-root hidden';
     root.setAttribute('aria-hidden', 'true');
     return root;
   }
@@ -36,7 +36,7 @@
 
   function initCursorFollower(opts) {
     opts = opts || {};
-    if (isTouchDevice() || prefersReducedMotion()) return { destroy: () => {} };
+    if (isTouchDevice() || prefersReducedMotion()) return { destroy: () => { } };
 
     const root = createRoot();
     document.body.appendChild(root);
@@ -47,7 +47,7 @@
     let mouseY = window.innerHeight / 2;
     let posX = mouseX;
     let posY = mouseY;
-    const ease = 0.18;
+    const ease = 1;
     let ticking = false;
     let lastSpawn = 0;
 
@@ -65,11 +65,11 @@
 
     function isInteractiveElement(el) {
       if (!el) return false;
-      return !!el.closest && !!el.closest('a, button, [role="button"], #sprite');
+      return !!el.closest && !!el.closest('a, #sprite');
     }
 
     function setPointerState(over) {
-      if (over === pointerOverInteractive) return;
+      // if (over === pointerOverInteractive) return;
       pointerOverInteractive = over;
       // hide/show the JS sprite root by toggling the hidden class so
       // child trail animations remain in the render tree and can finish
