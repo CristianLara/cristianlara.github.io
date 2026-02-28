@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/kayla",
+      "destination": "https://kayla.cristianlara.me",
+      "permanent": true
+    },
+    {
+      "source": "/stanford-pokemon",
+      "destination": "https://stanford-pokemon.cristianlara.me",
+      "permanent": true
+    }
+  ]
+}
